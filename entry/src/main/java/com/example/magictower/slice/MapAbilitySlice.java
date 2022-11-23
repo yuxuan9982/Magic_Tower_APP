@@ -1,17 +1,14 @@
 package com.example.magictower.slice;
 
-import com.example.magictower.Model.Hero;
+import com.example.magictower.model.Hero;
 import com.example.magictower.ResourceTable;
 import ohos.aafwk.ability.AbilitySlice;
 import ohos.aafwk.content.Intent;
-import ohos.agp.animation.AnimatorProperty;
 import ohos.agp.components.*;
 import ohos.agp.components.element.PixelMapElement;
-import ohos.agp.components.element.ShapeElement;
 import ohos.agp.utils.LayoutAlignment;
 import ohos.global.resource.NotExistException;
 import ohos.global.resource.Resource;
-import ohos.media.image.PixelMap;
 
 import java.io.IOException;
 

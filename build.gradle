@@ -31,7 +31,6 @@ buildscript {
         classpath 'com.huawei.ohos:decctest:1.2.7.11'
     }
 }
-
 allprojects {
     repositories {
         maven {

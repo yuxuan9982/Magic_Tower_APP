@@ -43,7 +43,7 @@
         ohos:id="$+id:get_save"
         ohos:top_margin="50vp"
         ohos:background_element="$graphic:background_ability_main"
-        ohos:text="读取进度"
+        ohos:text="继续游戏"
         />
 
     <Button

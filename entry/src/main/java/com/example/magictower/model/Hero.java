@@ -1,10 +1,14 @@
-package com.example.magictower.Model;
+package com.example.magictower.model;
 
-import ohos.agp.components.TableLayout;
+import ohos.data.orm.OrmObject;
+import ohos.data.orm.annotation.Entity;
+import ohos.data.orm.annotation.PrimaryKey;
 
-public class Hero {
+@Entity(tableName = "Hero")
+public class Hero extends OrmObject {
+    @PrimaryKey //将Hash设置为主键
+    private Integer id;
     int health,attack,defence,level,red_k,blue_k,yellow_k,stair;
-
     public Hero(int health,int attack,int defence,int level,int red_k,int blue_k,int yellow_k,int stair){
         this.health=health;
         this.attack= attack;
@@ -15,6 +19,7 @@ public class Hero {
         this.yellow_k=yellow_k;
         this.stair=stair;
     }
+    public Hero(){}
     public int getHealth() {
         return health;
     }
@@ -77,5 +82,13 @@ public class Hero {
 
     public void setStair(int stair) {
         this.stair = stair;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 }
