@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="utf-8"?>
+<DirectionalLayout
+    xmlns:ohos="http://schemas.huawei.com/res/ohos"
+    ohos:height="match_parent"
+    ohos:width="match_parent"
+    ohos:orientation="vertical">
+
+
+    <DependentLayout
+        ohos:height="match_content"
+        ohos:top_margin="40vp"
+        ohos:left_margin="20vp"
+        ohos:width="match_content">
+        <Image
+            ohos:height="20vp"
+            ohos:width="20vp"
+            ohos:id="$+id:heart"
+            ohos:background_element="$media:heart"
+            />
+        <Text
+            ohos:height="20vp"
+            ohos:width="50vp"
+            ohos:text="1000"
+            ohos:text_size="20vp"
+            ohos:id="$+id:health"
+            ohos:right_of="$id:heart"
+            ohos:left_margin="5vp"
+            />
+        <Image
+            ohos:height="20vp"
+            ohos:width="20vp"
+            ohos:id="$+id:sword"
+            ohos:right_of="$id:health"
+            ohos:left_margin="10vp"
+            ohos:background_element="$media:sword"
+            />
+        <Text
+            ohos:height="20vp"
+            ohos:width="50vp"
+            ohos:text="30"
+            ohos:text_size="20vp"
+            ohos:id="$+id:attack"
+            ohos:right_of="$id:sword"
+            ohos:left_margin="5vp"
+            />
+
+        <Image
+            ohos:height="20vp"
+            ohos:width="20vp"
+            ohos:id="$+id:shield"
+            ohos:right_of="$id:attack"
+
+            ohos:background_element="$media:shield"
+            />
+        <Text
+            ohos:height="20vp"
+            ohos:width="50vp"
+            ohos:text="10"
+            ohos:text_size="20vp"
+            ohos:id="$+id:defence"
+            ohos:right_of="$id:shield"
+            ohos:left_margin="5vp"
+            />
+
+        <Image
+            ohos:height="20vp"
+            ohos:width="20vp"
+            ohos:id="$+id:level_img"
+            ohos:right_of="$id:defence"
+
+            ohos:background_element="$media:level"
+            />
+        <Text
+            ohos:height="20vp"
+            ohos:width="50vp"
+            ohos:text="1"
+            ohos:text_size="20vp"
+            ohos:id="$+id:level"
+            ohos:right_of="$id:level_img"
+            ohos:left_margin="5vp"
+            />
+
+
+
+        <Image
+            ohos:height="20vp"
+            ohos:width="20vp"
+            ohos:background_element="$media:red_key"
+            ohos:id="$+id:key1"
+            ohos:top_margin="20vp"
+            ohos:below="$id:heart"
+            />
+
+        <Text
+            ohos:height="20vp"
+            ohos:width="50vp"
+            ohos:text="1"
+            ohos:text_size="20vp"
+            ohos:id="$+id:red_key"
+            ohos:below="$id:heart"
+            ohos:right_of="$id:key1"
+            ohos:left_margin="5vp"
+            ohos:top_margin="20vp"
+            />
+
+        <Image
+            ohos:height="20vp"
+            ohos:width="20vp"
+            ohos:background_element="$media:blue_key"
+            ohos:id="$+id:key2"
+            ohos:top_margin="20vp"
+            ohos:left_margin="10vp"
+            ohos:right_of="$id:red_key"
+            ohos:below="$id:heart"
+            />
+
+        <Text
+            ohos:height="20vp"
+            ohos:width="50vp"
+            ohos:text="1"
+            ohos:text_size="20vp"
+            ohos:id="$+id:blue_key"
+            ohos:below="$id:heart"
+            ohos:right_of="$id:key2"
+            ohos:left_margin="5vp"
+            ohos:top_margin="20vp"
+            />
+
+
+        <Image
+            ohos:height="20vp"
+            ohos:width="20vp"
+            ohos:background_element="$media:yellow_key"
+            ohos:id="$+id:key3"
+            ohos:top_margin="20vp"
+            ohos:right_of="$id:blue_key"
+            ohos:below="$id:heart"
+            />
+
+        <Text
+            ohos:height="20vp"
+            ohos:width="50vp"
+            ohos:text="1"
+            ohos:text_size="20vp"
+            ohos:id="$+id:yellow_key"
+            ohos:below="$id:heart"
+            ohos:right_of="$id:key3"
+            ohos:left_margin="5vp"
+            ohos:top_margin="20vp"
+            />
+
+        <Image
+            ohos:height="20vp"
+            ohos:width="20vp"
+            ohos:background_element="$media:stair"
+            ohos:id="$+id:stair_img"
+            ohos:top_margin="20vp"
+            ohos:right_of="$id:yellow_key"
+            ohos:below="$id:heart"
+            />
+
+        <Text
+            ohos:height="20vp"
+            ohos:width="35vp"
+            ohos:text="1"
+            ohos:text_size="20vp"
+            ohos:id="$+id:stair"
+            ohos:below="$id:heart"
+            ohos:right_of="$id:stair_img"
+            ohos:left_margin="5vp"
+            ohos:top_margin="20vp"
+            />
+
+    </DependentLayout>
+
+    <TableLayout
+        ohos:height="match_content"
+        ohos:width="match_parent"
+        ohos:column_count="12"
+        ohos:row_count="12"
+        >
+
+
+
+    </TableLayout>
+
+</DirectionalLayout>

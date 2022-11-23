@@ -1,0 +1,2 @@
+rootProject.name = 'MagicTower'
+include ':entry'
