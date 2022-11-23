@@ -17,8 +17,9 @@ import java.io.IOException;
 
 public class MapAbilitySlice extends AbilitySlice {
     Image [] [] mp=new Image[12][12];
-    //Hero hero;
+    Hero hero;
     Image hero_img;
+    int sx=1,sy=1,dx,dy;
     public void set_Background(Component component, int id){
         try {
             Resource resource= getResourceManager().getResource(id);
@@ -34,10 +35,10 @@ public class MapAbilitySlice extends AbilitySlice {
     public void onStart(Intent intent) {
         super.onStart(intent);
         //super.setUIContent(ResourceTable.Layout_MapAbility);
-        //hero=new Hero(1000,30,10,1,1,1,1,1);
+        hero=new Hero(1000,30,10,1,1,1,1,1);
         hero_img=new Image(this);
-        //DirectionalLayout dl=(DirectionalLayout) LayoutScatter.getInstance(this).parse(ResourceTable.Layout_MapAbility,null,false);
-        DirectionalLayout dl=new DirectionalLayout(this);
+        DirectionalLayout dl=(DirectionalLayout) LayoutScatter.getInstance(this).parse(ResourceTable.Layout_MapAbility,null,false);
+        //DirectionalLayout dl=new DirectionalLayout(this);
         dl.setAlignment(LayoutAlignment.HORIZONTAL_CENTER);
 
 
@@ -46,6 +47,7 @@ public class MapAbilitySlice extends AbilitySlice {
 
         //获取到宽度
         int tot_width= getLayoutParams().width;
+        dx=dy=tot_width/12;
         tot_width-=100;
         tl.setMarginLeft(50);tl.setMarginTop(50);
         for(int i=0;i<12;i++){
@@ -57,6 +59,7 @@ public class MapAbilitySlice extends AbilitySlice {
                 tl.addComponent(mp[i][j]);
             }
         }
+        tl.addComponent(hero_img);
         dl.addComponent(tl);
 
         Image up=new Image(this),down=new Image(this),left=new Image(this),right=new Image(this);
@@ -78,10 +81,13 @@ public class MapAbilitySlice extends AbilitySlice {
         set_Background(left,ResourceTable.Media_left);set_Background(right,ResourceTable.Media_right);
 
 
-        Text empty=new Text(this);
-        empty.setWidth(AttrHelper.vp2px(60,this));
-        empty.setHeight(AttrHelper.vp2px(60,this));
-        ddl.addComponent(left);ddl.addComponent(empty);ddl.addComponent(right);
+        Image start=new Image(this);
+        start.setWidth(AttrHelper.vp2px(30,this));
+        start.setHeight(AttrHelper.vp2px(30,this));
+        int sz=(int)AttrHelper.vp2px(15,this);
+        start.setMarginsTopAndBottom(sz,sz);
+        start.setMarginsLeftAndRight(sz,sz);
+        ddl.addComponent(left);ddl.addComponent(start);ddl.addComponent(right);
 
         down.setHeight(AttrHelper.vp2px(30,this));
         down.setWidth(AttrHelper.vp2px(60,this));
@@ -93,22 +99,47 @@ public class MapAbilitySlice extends AbilitySlice {
 
         hero_img.setWidth(tot_width/12);
         hero_img.setHeight(tot_width/12);
+        hero_img.setVisibility(Component.INVISIBLE);
 
         set_Background(hero_img,ResourceTable.Media_hero);
-        //dl.addComponent(hero_img);
-        //hero_img.setPosition(mp[0][0].getContentPositionX(),mp[0][0].getContentPositionY());
 
-
-        float x1=1010,y1=1010;
-
-        hero_img.setContentPositionX(x1);
-        hero_img.setContentPositionY(y1);
-        set_Background(hero_img,ResourceTable.Media_hero);
-        dl.addComponent(hero_img);
-
+        set_Background(start,ResourceTable.Media_start2);
+        start.setClickedListener(o->{
+            hero_img.setVisibility(Component.VISIBLE);
+            hero_img.setContentPositionX(mp[0][0].getContentPositionX());hero_img.setContentPositionY(mp[0][0].getContentPositionY());
+            sx=sy=0;
+        });
+        //上下左右分别添加响应
+        up.setClickedListener(o->{
+            if(sx>0){
+                sx--;
+            }
+            if(!update_move())sx++;
+        });
+        down.setClickedListener(p->{
+            if(sx<11){
+                sx++;
+                if(!update_move())sx--;
+            }
+        });
+        left.setClickedListener(o->{
+            if(sy>0){
+                sy--;
+                if(!update_move())sy++;
+            }
+        });
+        right.setClickedListener(p->{
+            if(sy<11){
+                sy++;
+                if(!update_move())sy--;
+            }
+        });
         super.setUIContent(dl);
     }
-
+    public boolean update_move(){
+        hero_img.setContentPositionX(mp[sx][sy].getContentPositionX());hero_img.setContentPositionY(mp[sx][sy].getContentPositionY());
+        return true;
+    }
     @Override
     public void onActive() {
         super.onActive();
