@@ -9,6 +9,8 @@ import ohos.aafwk.content.Intent;
 import ohos.agp.components.*;
 import ohos.agp.components.element.PixelMapElement;
 import ohos.agp.utils.LayoutAlignment;
+import ohos.agp.window.dialog.CommonDialog;
+import ohos.agp.window.dialog.IDialog;
 import ohos.data.DatabaseHelper;
 import ohos.data.orm.OrmContext;
 import ohos.global.resource.NotExistException;
@@ -22,7 +24,7 @@ public class MapAbilitySlice extends AbilitySlice {
     Image [] [] mp=new Image[cnt][cnt];
     Hero hero;
     Image hero_img;
-    int sx=1,sy=1,dx,dy;
+    int dx,dy;
     OrmContext o_ctx;
     Map info;String info_s;
     public int get_resource(char c){
@@ -35,6 +37,8 @@ public class MapAbilitySlice extends AbilitySlice {
             case '3':
             case '4':
                 return ResourceTable.Media_stair;
+            case 'a':
+                return ResourceTable.Media_skeleton;
         }
         return 0;
     }
@@ -49,11 +53,12 @@ public class MapAbilitySlice extends AbilitySlice {
             e.printStackTrace();
         }
     }
+    int new_x,new_y;
     @Override
     public void onStart(Intent intent) {
         super.onStart(intent);
         //super.setUIContent(ResourceTable.Layout_MapAbility);
-        hero=new Hero(1000,30,10,1,1,1,1,1,1,1);
+        //hero=new Hero(1000,30,10,1,1,1,1,1,1,1);
         hero_img=new Image(this);
         DirectionalLayout dl=(DirectionalLayout) LayoutScatter.getInstance(this).parse(ResourceTable.Layout_MapAbility,null,false);
         //DirectionalLayout dl=new DirectionalLayout(this);
@@ -67,6 +72,8 @@ public class MapAbilitySlice extends AbilitySlice {
         o_ctx=helper.getOrmContext("database","database.db", Map_db.class);
 //        info=o_ctx.query(o_ctx.where(Map.class).equalTo("level",hero.getLevel()) );
         List<Map> data=o_ctx.query(o_ctx.where(Map.class) );
+        List<Hero> heroes=o_ctx.query(o_ctx.where(Hero.class));
+        hero=heroes.get(0);
         info=data.get(0);
         info_s=info.getS();
         //获取到宽度
@@ -131,39 +138,106 @@ public class MapAbilitySlice extends AbilitySlice {
         set_Background(start,ResourceTable.Media_start2);
         start.setClickedListener(o->{
             hero_img.setVisibility(Component.VISIBLE);
-            hero_img.setContentPositionX(mp[0][0].getContentPositionX());hero_img.setContentPositionY(mp[0][0].getContentPositionY());
-            sx=sy=0;
+            int x=hero.getX(),y=hero.getY();
+            hero_img.setContentPositionX(mp[x][y].getContentPositionX());hero_img.setContentPositionY(mp[x][y].getContentPositionY());
+            //sx=sy=0;
+            //hero.setX(0);hero.setY(0);
         });
+        new_x=hero.getX();new_y=hero.getY();
         //上下左右分别添加响应
         up.setClickedListener(o->{
-            if(sx>0){
-                sx--;
+            if(hero.getX()>0){
+                new_x=(hero.getX()-1);
+                interact();
             }
-            if(!update_move())sx++;
         });
         down.setClickedListener(p->{
-            if(sx<cnt-1){
-                sx++;
-                if(!update_move())sx--;
+            if(hero.getX()<cnt-1){
+                new_x=(hero.getX()+1);
+                interact();
             }
         });
         left.setClickedListener(o->{
-            if(sy>0){
-                sy--;
-                if(!update_move())sy++;
+            if(hero.getY()>0){
+                new_y=(hero.getY()-1);
+                interact();
             }
         });
         right.setClickedListener(p->{
-            if(sy<cnt-1){
-                sy++;
-                if(!update_move())sy--;
+            if(hero.getY()<cnt-1){
+                new_y=(hero.getY()+1);
+                interact();
             }
         });
         super.setUIContent(dl);
     }
+    int fg;
+    public void interact(){
+        int x=new_x,y=new_y;
+        if(info_s.charAt(new_x*10+new_y)>='a') {
+            CommonDialog cd=new CommonDialog(getContext());
+            cd.setAutoClosable(true);
+            cd.setContentText("是否要攻击敌人？");
+            cd.setButton(1, "否", new IDialog.ClickedListener() {
+                @Override
+                public void onClick(IDialog iDialog, int i) {
+                    cd.destroy();
+                }
+            });
+            cd.setButton(2, "是", new IDialog.ClickedListener() {
+                @Override
+                public void onClick(IDialog iDialog, int i) {
+                    String new_s=new String();
+                    for(int j=0;j<info_s.length();j++){
+                        if(j==x*10+y) new_s+='0';
+                        else new_s+= info_s.charAt(j);
+                    }
+                    info_s=new_s;
+                    set_Background(mp[x][y],ResourceTable.Media_ground);
+                    update_move();
+                    cd.destroy();
+                }
+            });
+            cd.show();
+        }else if(info_s.charAt(x*10+y)=='1'){
+            return ;
+        }else{
+            hero.setX(new_x);hero.setY(new_y);
+            update_move();
+        }
+    }
     public boolean update_move(){
-        hero_img.setContentPositionX(mp[sx][sy].getContentPositionX());hero_img.setContentPositionY(mp[sx][sy].getContentPositionY());
+        int x=hero.getX(),y=hero.getY();
+        hero_img.setContentPositionX(mp[x][y].getContentPositionX());hero_img.setContentPositionY(mp[x][y].getContentPositionY());
         return true;
+    }
+//    public void show_dialog(){
+//        CommonDialog cd=new CommonDialog(this);
+//        cd.setAutoClosable(true);
+//        DirectionalLayout dl2=build_dl(0);
+//        ScrollView sv=new ScrollView(this);
+//        sv.setHeight(AttrHelper.vp2px(600,getContext()));
+//        sv.setHeight(AttrHelper.vp2px(600,getContext()));
+//        sv.setWidth(ComponentContainer.LayoutConfig.MATCH_CONTENT);
+//
+//        Text content= new Text(this);
+//        //set_but_back(content,220,220,220);
+//        content.setTextSize(50);content.setMultipleLine(true);
+//        content.setText(""
+//        );
+//
+//        sv.addComponent(content);
+//        dl2.addComponent(sv);
+//        cd.setContentCustomComponent(dl2);
+//        cd.show();
+//    }
+    public DirectionalLayout build_dl(int type){
+        DirectionalLayout dl=new DirectionalLayout(this);
+        if(type==0)dl.setOrientation(Component.VERTICAL);else dl.setOrientation(Component.HORIZONTAL);
+        dl.setWidth(ComponentContainer.LayoutConfig.MATCH_CONTENT);
+        dl.setHeight(ComponentContainer.LayoutConfig.MATCH_CONTENT);
+        dl.setAlignment(LayoutAlignment.CENTER);
+        return dl;
     }
     @Override
     public void onActive() {
