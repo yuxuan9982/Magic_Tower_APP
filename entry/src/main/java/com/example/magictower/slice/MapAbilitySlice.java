@@ -2,21 +2,42 @@ package com.example.magictower.slice;
 
 import com.example.magictower.model.Hero;
 import com.example.magictower.ResourceTable;
+import com.example.magictower.model.Map;
+import com.example.magictower.model.Map_db;
 import ohos.aafwk.ability.AbilitySlice;
 import ohos.aafwk.content.Intent;
 import ohos.agp.components.*;
 import ohos.agp.components.element.PixelMapElement;
 import ohos.agp.utils.LayoutAlignment;
+import ohos.data.DatabaseHelper;
+import ohos.data.orm.OrmContext;
 import ohos.global.resource.NotExistException;
 import ohos.global.resource.Resource;
 
 import java.io.IOException;
+import java.util.List;
 
 public class MapAbilitySlice extends AbilitySlice {
-    Image [] [] mp=new Image[12][12];
+    int cnt=10;
+    Image [] [] mp=new Image[cnt][cnt];
     Hero hero;
     Image hero_img;
     int sx=1,sy=1,dx,dy;
+    OrmContext o_ctx;
+    Map info;String info_s;
+    public int get_resource(char c){
+        switch (c){
+            case '0':
+                return ResourceTable.Media_ground;
+            case '1':
+                return ResourceTable.Media_wall;
+            case '2':
+            case '3':
+            case '4':
+                return ResourceTable.Media_stair;
+        }
+        return 0;
+    }
     public void set_Background(Component component, int id){
         try {
             Resource resource= getResourceManager().getResource(id);
@@ -32,7 +53,7 @@ public class MapAbilitySlice extends AbilitySlice {
     public void onStart(Intent intent) {
         super.onStart(intent);
         //super.setUIContent(ResourceTable.Layout_MapAbility);
-        hero=new Hero(1000,30,10,1,1,1,1,1);
+        hero=new Hero(1000,30,10,1,1,1,1,1,1,1);
         hero_img=new Image(this);
         DirectionalLayout dl=(DirectionalLayout) LayoutScatter.getInstance(this).parse(ResourceTable.Layout_MapAbility,null,false);
         //DirectionalLayout dl=new DirectionalLayout(this);
@@ -40,19 +61,26 @@ public class MapAbilitySlice extends AbilitySlice {
 
 
         TableLayout tl=new TableLayout(this);
-        tl.setRowCount(12);tl.setColumnCount(12);
+        tl.setRowCount(cnt);tl.setColumnCount(cnt);
 
+        DatabaseHelper helper=new DatabaseHelper(this);
+        o_ctx=helper.getOrmContext("database","database.db", Map_db.class);
+//        info=o_ctx.query(o_ctx.where(Map.class).equalTo("level",hero.getLevel()) );
+        List<Map> data=o_ctx.query(o_ctx.where(Map.class) );
+        info=data.get(0);
+        info_s=info.getS();
         //获取到宽度
         int tot_width= getLayoutParams().width;
-        dx=dy=tot_width/12;
+        dx=dy=tot_width/cnt;
         tot_width-=100;
         tl.setMarginLeft(50);tl.setMarginTop(50);
-        for(int i=0;i<12;i++){
-            for(int j=0;j<12;j++){
+        for(int i=0;i<cnt;i++){
+            for(int j=0;j<cnt;j++){
                 mp[i][j]=new Image(this);
                 set_Background(mp[i][j],ResourceTable.Media_ground);
-                mp[i][j].setWidth(tot_width/12);
-                mp[i][j].setHeight(tot_width/12);
+                set_Background(mp[i][j],get_resource(info_s.charAt(i*10+j) ) );
+                mp[i][j].setWidth(tot_width/cnt);
+                mp[i][j].setHeight(tot_width/cnt);
                 tl.addComponent(mp[i][j]);
             }
         }
@@ -94,8 +122,8 @@ public class MapAbilitySlice extends AbilitySlice {
         dl.addComponent(down);
 
 
-        hero_img.setWidth(tot_width/12);
-        hero_img.setHeight(tot_width/12);
+        hero_img.setWidth(tot_width/cnt);
+        hero_img.setHeight(tot_width/cnt);
         hero_img.setVisibility(Component.INVISIBLE);
 
         set_Background(hero_img,ResourceTable.Media_hero);
@@ -114,7 +142,7 @@ public class MapAbilitySlice extends AbilitySlice {
             if(!update_move())sx++;
         });
         down.setClickedListener(p->{
-            if(sx<11){
+            if(sx<cnt-1){
                 sx++;
                 if(!update_move())sx--;
             }
@@ -126,7 +154,7 @@ public class MapAbilitySlice extends AbilitySlice {
             }
         });
         right.setClickedListener(p->{
-            if(sy<11){
+            if(sy<cnt-1){
                 sy++;
                 if(!update_move())sy--;
             }

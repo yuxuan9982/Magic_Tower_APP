@@ -8,8 +8,8 @@ import ohos.data.orm.annotation.PrimaryKey;
 public class Hero extends OrmObject {
     @PrimaryKey //将Hash设置为主键
     private Integer id;
-    int health,attack,defence,level,red_k,blue_k,yellow_k,stair;
-    public Hero(int health,int attack,int defence,int level,int red_k,int blue_k,int yellow_k,int stair){
+    int health,attack,defence,level,red_k,blue_k,yellow_k,stair,x,y;
+    public Hero(int health,int attack,int defence,int level,int red_k,int blue_k,int yellow_k,int stair,int x,int y){
         this.health=health;
         this.attack= attack;
         this.level=level;
@@ -18,6 +18,7 @@ public class Hero extends OrmObject {
         this.blue_k=blue_k;
         this.yellow_k=yellow_k;
         this.stair=stair;
+        this.x=x;this.y=y;
     }
     public Hero(){}
     public int getHealth() {
@@ -90,5 +91,21 @@ public class Hero extends OrmObject {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public void setY(int y) {
+        this.y = y;
     }
 }
