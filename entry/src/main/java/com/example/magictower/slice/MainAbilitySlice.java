@@ -1,5 +1,6 @@
 package com.example.magictower.slice;
 
+import com.example.magictower.MapAbility;
 import com.example.magictower.ResourceTable;
 import ohos.aafwk.ability.AbilitySlice;
 import ohos.aafwk.content.Intent;
@@ -16,8 +17,8 @@ public class MainAbilitySlice extends AbilitySlice {
             @Override
             public void onClick(Component component) {
                 Intent intent1=new Intent();
-                terminate();
-
+                MapAbilitySlice slice=new MapAbilitySlice();
+                present(slice,intent);
             }
         });
         Button get_save=(Button) findComponentById(ResourceTable.Id_get_save);

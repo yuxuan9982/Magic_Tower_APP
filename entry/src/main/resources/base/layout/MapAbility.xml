@@ -173,15 +173,35 @@
 
     </DependentLayout>
 
-    <TableLayout
-        ohos:height="match_content"
-        ohos:width="match_parent"
-        ohos:column_count="12"
-        ohos:row_count="12"
-        >
+<!--    <TableLayout-->
+<!--        ohos:height="match_content"-->
+<!--        ohos:width="match_parent"-->
+<!--        ohos:column_count="12"-->
+<!--        ohos:left_margin="20vp"-->
+<!--        ohos:top_margin="20vp"-->
+<!--        ohos:row_count="12"-->
+<!--        >-->
+<!--        <Image-->
+<!--            ohos:height="20vp"-->
+<!--            ohos:width="20vp"-->
+<!--            ohos:background_element="$media:ground"-->
+<!--            ohos:scale_mode="stretch"-->
+<!--            />-->
+<!--        <Image-->
+<!--            ohos:height="20vp"-->
+<!--            ohos:width="20vp"-->
+<!--            ohos:background_element="$media:ground"-->
+<!--            ohos:scale_mode="stretch"-->
+<!--            />-->
 
 
-
-    </TableLayout>
+    <Image
+        ohos:height="20vp"
+        ohos:width="20vp"
+        ohos:id="$+id:Hero"
+        ohos:background_element="$media:hero"
+        ohos:visibility="invisible"
+        />
+<!--    </TableLayout>-->
 
 </DirectionalLayout>
