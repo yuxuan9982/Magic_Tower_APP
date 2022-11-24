@@ -7,6 +7,8 @@ import com.example.magictower.model.Map_db;
 import com.example.magictower.model.Monster;
 import ohos.aafwk.ability.AbilitySlice;
 import ohos.aafwk.content.Intent;
+import ohos.agp.animation.AnimatorProperty;
+import ohos.agp.animation.AnimatorValue;
 import ohos.agp.components.*;
 import ohos.agp.components.element.PixelMapElement;
 import ohos.agp.utils.LayoutAlignment;
@@ -223,28 +225,23 @@ public class MapAbilitySlice extends AbilitySlice{
             cd.setButton(2, "是", new IDialog.ClickedListener() {
                 @Override
                 public void onClick(IDialog iDialog, int i) {
-                    try {
-                        show_status();
-                        attack();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
+                    show_status();
                     //杀了怪物以后，怪物位置变成可以行走的土地
                     String new_s=new String();
+                    //把字符串改了，字符串不支持直接修改，勉强这样改吧，反正常数也就100多
                     for(int j=0;j<info_s.length();j++){
-                        if(j==x*10+y) new_s+='0';
-                        else new_s+= info_s.charAt(j);
+                        if(j==x*10+y) new_s+='0';else new_s+= info_s.charAt(j);
                     }
-                    info_s=new_s;
-                    set_Background(mp[x][y],ResourceTable.Media_ground);
-                    update_move();
+                    info_s=new_s;set_Background(mp[x][y],ResourceTable.Media_ground);
+                    new_x=hero.getX();new_y=hero.getY();
+                    //点了就销毁
                     cd.destroy();
                 }
             });
             cd.show();
         }else if(info_s.charAt(x*10+y)=='1'){
-            return ;
-        }else{
+            new_x=hero.getX();new_y=hero.getY();return ;
+        }else if(info_s.charAt(x*10+y)=='0'){
             hero.setX(new_x);hero.setY(new_y);
             update_move();
         }
@@ -252,20 +249,21 @@ public class MapAbilitySlice extends AbilitySlice{
     DirectionalLayout show_l;
     public void update_show(){
         Text health=(Text) show_l.findComponentById(ResourceTable.Id_status_health);
-        Text attack=(Text) dl.findComponentById(ResourceTable.Id_status_attack);
-        Text defence=(Text) dl.findComponentById(ResourceTable.Id_status_defence);
+        Text attack=(Text) show_l.findComponentById(ResourceTable.Id_status_attack);
+        Text defence=(Text) show_l.findComponentById(ResourceTable.Id_status_defence);
         health.setText(String.valueOf(hero.getHealth() ) );
         attack.setText(String.valueOf(hero.getAttack() ) );
         defence.setText(String.valueOf(hero.getDefence()));
 
         Text health2=(Text) show_l.findComponentById(ResourceTable.Id_status_health_monster);
-        Text attack2=(Text) dl.findComponentById(ResourceTable.Id_status_attack_monster);
-        Text defence2=(Text) dl.findComponentById(ResourceTable.Id_status_defence_monster);
+        Text attack2=(Text) show_l.findComponentById(ResourceTable.Id_status_attack_monster);
+        Text defence2=(Text) show_l.findComponentById(ResourceTable.Id_status_defence_monster);
         health2.setText(String.valueOf(monster.getHealth() ) );
         attack2.setText(String.valueOf(monster.getAttack() ) );
         defence2.setText(String.valueOf(monster.getDefence()));
 
     }
+    int dmg1,dmg2,begin_h1,begin_h2,end_h1,end_h2;
     //互相攻击，首先显示状态页面，然后每隔一段时间update
     public void show_status(){
         CommonDialog cd=new CommonDialog(getContext());
@@ -273,39 +271,47 @@ public class MapAbilitySlice extends AbilitySlice{
         update_show();
         cd.setAutoClosable(true);
         cd.setContentCustomComponent(show_l);
+        cd.setAlignment(LayoutAlignment.HORIZONTAL_CENTER);
         cd.show();
-    }
-    public void attack() throws InterruptedException {
-        TimerTask timerTask=new TimerTask() {
-            @Override
-            public void run() {
-//                System.out.println("try ok?");
-//                int atk1=hero.getAttack(),atk2=monster.getAttack();
-//                int def1=hero.getDefence(),def2=hero.getDefence();
-//                int heal1=hero.getHealth(),heal2=hero.getHealth();
-//                heal1-= Math.max(0, atk2 - def1);
-//                heal2-=Math.max(0,atk1-def2);
-//                if(heal1<0){
-//                    CommonDialog cd=new CommonDialog(getContext());
-//                    cd.setContentText("你死了！");
-//                    cd.setButton(1, "确定", new IDialog.ClickedListener() {
-//                        @Override
-//                        public void onClick(IDialog iDialog, int i) {
-//                            cd.destroy();terminate();
-//                        }
-//                    });
-//                }
-//                monster.setHealth(heal2);hero.setHealth(heal1);
-//                update_show();
-                //update_move();
-            }
-        };
-        Timer timer=new Timer();
-        //while(monster.getHealth()>0){
-            timer.schedule(timerTask,500);
-        //}
-    }
+        dmg1= Math.max(1,hero.getAttack()-monster.getDefence());dmg2=Math.max(1,monster.getAttack()-hero.getDefence());
+        int need=Math.min((hero.getHealth()+dmg2-1)/dmg2,(monster.health+dmg1-1)/dmg1);
+        begin_h1=hero.getHealth();begin_h2=monster.getHealth();
+        end_h1=begin_h1-need*dmg2;end_h2=begin_h2-need*dmg1;
 
+        AnimatorValue animatorValue=new AnimatorValue();
+        animatorValue.setDuration(1000);
+        animatorValue.setValueUpdateListener(new AnimatorValue.ValueUpdateListener() {
+            @Override
+            public void onUpdate(AnimatorValue animatorValue, float v) {
+                hero.setHealth((int)(begin_h1-(begin_h1-end_h1)*v)  );
+                monster.setHealth((int)(begin_h2- (begin_h2-end_h2)*v));
+                update_show();
+                if(v==1){
+                    if(end_h1>0){
+                        ToastDialog td=new ToastDialog(getContext());
+                        td.setText("挑战成功");
+                        td.show();td.setAutoClosable(true);
+                        cd.destroy();
+                    }else{
+                        CommonDialog cd2=new CommonDialog(getContext());
+                        cd2.setContentText("很遗憾，你并没有打败怪物！");
+                        cd2.setButton(1, "重新开始", new IDialog.ClickedListener() {
+                            @Override
+                            public void onClick(IDialog iDialog, int i) {
+                                cd2.destroy();
+                            }
+                        });
+                        cd2.show();cd.destroy();terminate();
+                    }
+                    hero.setHealth(end_h1);
+                    monster.setHealth(end_h2);
+                    update_ui();
+                }
+            }
+
+        });
+        animatorValue.start();
+    }
     public boolean update_move(){
         int x=hero.getX(),y=hero.getY();
         hero_img.setContentPositionX(mp[x][y].getContentPositionX());hero_img.setContentPositionY(mp[x][y].getContentPositionY());
