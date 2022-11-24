@@ -1,10 +1,7 @@
 package com.example.magictower.slice;
 
-import com.example.magictower.model.Hero;
+import com.example.magictower.model.*;
 import com.example.magictower.ResourceTable;
-import com.example.magictower.model.Map;
-import com.example.magictower.model.Map_db;
-import com.example.magictower.model.Monster;
 import ohos.aafwk.ability.AbilitySlice;
 import ohos.aafwk.content.Intent;
 import ohos.agp.animation.AnimatorProperty;
@@ -56,6 +53,12 @@ public class MapAbilitySlice extends AbilitySlice{
                 return ResourceTable.Media_slime;
             case 'c':
                 return ResourceTable.Media_skeleton_warrior;
+            case 'd':
+                return ResourceTable.Media_abyss_wacher;
+            case 'e':
+                return ResourceTable.Media_ash_judge;
+            case 'f':
+                return ResourceTable.Media_final_boss;
             case 's':
                 return ResourceTable.Media_god_shield;
             case 't':
@@ -72,6 +75,12 @@ public class MapAbilitySlice extends AbilitySlice{
                 return ResourceTable.Media_big_blood;
             case 'z':
                 return ResourceTable.Media_small_blood;
+            case 'p':
+                return ResourceTable.Media_red_key;
+            case 'q':
+                return ResourceTable.Media_blue_key;
+            case 'r':
+                return ResourceTable.Media_yellow_key;
 
         }
         return 0;
@@ -246,7 +255,7 @@ public class MapAbilitySlice extends AbilitySlice{
     public void interact(){
         int x=new_x,y=new_y;
         char c=info_s.charAt(x*10+y);
-        if(c>='a'&&c<='s') {
+        if(c>='a'&&c<'p') {
             //获取到是哪种怪物
             List<Monster> monsters=o_ctx.query(o_ctx.where(Monster.class).equalTo("kind",info_s.charAt(new_x*10+new_y)));
             if(monsters.size()>=1)
@@ -320,6 +329,16 @@ public class MapAbilitySlice extends AbilitySlice{
             info.setS(info_s);o_ctx.update(info);o_ctx.flush();
             present(slice,in1);
             terminate();
+        }else if(c>='p'){
+            List<Supply> sup=o_ctx.query(o_ctx.where(Supply.class).equalTo("kind",c));
+            Supply supply=sup.get(0);
+            hero.setHealth(hero.getHealth()+supply.getHealth());
+            hero.setAttack(hero.getAttack()+supply.getAttack());
+            hero.setDefence(hero.getDefence()+supply.getShield());
+            hero.setRed_k(hero.getRed_k()+supply.getRed_key());
+            hero.setBlue_k(hero.getBlue_k()+supply.getBlue_key());
+            hero.setYellow_k(hero.getYellow_k()+supply.getYellow_key());
+            update_all();change_info(x,y,'0');
         }
     }
     public void reset_pos(){
@@ -372,8 +391,8 @@ public class MapAbilitySlice extends AbilitySlice{
         animatorValue.setValueUpdateListener(new AnimatorValue.ValueUpdateListener() {
             @Override
             public void onUpdate(AnimatorValue animatorValue, float v) {
-                hero.setHealth((int)(begin_h1-(begin_h1-end_h1)*v)  );
-                monster.setHealth((int)(begin_h2- (begin_h2-end_h2)*v));
+                hero.setHealth(Math.max(0,(int)(begin_h1-(begin_h1-end_h1)*v) ) );
+                monster.setHealth(Math.max(0,(int)(begin_h2- (begin_h2-end_h2)*v)));
                 update_show();
                 if(v==1){
                     if(end_h1>0){

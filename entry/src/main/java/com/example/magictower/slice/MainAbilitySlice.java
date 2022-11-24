@@ -1,10 +1,7 @@
 package com.example.magictower.slice;
 
-import com.example.magictower.model.Hero;
-import com.example.magictower.model.Map;
-import com.example.magictower.model.Map_db;
+import com.example.magictower.model.*;
 import com.example.magictower.ResourceTable;
-import com.example.magictower.model.Monster;
 import ohos.aafwk.ability.AbilitySlice;
 import ohos.aafwk.content.Intent;
 import ohos.agp.colors.RgbColor;
@@ -69,14 +66,14 @@ public class MainAbilitySlice extends AbilitySlice {
         //初始化地图
         char[][] map1={
                 {'1','1','1','1','0','1','1','1','1','1'},
-                {'1','1','1','1','0','1','1','1','1','1'},
-                {'1','1','1','1','0','1','1','1','1','1'},
-                {'1','1','1','1','0','1','1','1','1','1'},
-                {'1','1','1','1','0','1','1','1','1','1'},
-                {'1','1','1','1','0','1','1','1','1','1'},
+                {'1','1','1','1','p','1','1','1','1','1'},
+                {'1','1','1','1','q','1','1','1','1','1'},
+                {'1','1','1','1','r','1','1','1','1','1'},
+                {'1','1','1','1','s','1','1','1','1','1'},
+                {'1','w','v','u','t','x','y','z','1','1'},
                 {'1','1','1','1','b','1','1','1','1','1'},
-                {'1','1','0','0','c','a','0','0','1','1'},
-                {'1','1','1','0','4','0','1','1','1','1'},
+                {'1','1','0','0','d','a','0','0','1','1'},
+                {'1','1','1','0','e','0','1','1','1','1'},
                 {'1','1','1','1','3','1','1','1','1','1'}
         };
         String s=new String();
@@ -87,8 +84,8 @@ public class MainAbilitySlice extends AbilitySlice {
         o_ctx.insert(mp);o_ctx.flush();
 
         char[][] map2={
-                {'3','0','0','0','0','0','0','0','0','0'},
-                {'1','1','1','1','1','1','1','1','1','0'},
+                {'3','f','0','0','0','0','0','0','0','0'},
+                {'1','1','4','1','1','1','1','1','1','0'},
                 {'0','0','a','6','0','1','1','1','1','0'},
                 {'0','a','1','1','0','1','1','1','1','0'},
                 {'1','1','1','1','0','1','1','1','1','0'},
@@ -112,6 +109,38 @@ public class MainAbilitySlice extends AbilitySlice {
             Monster m3=new Monster('c',400,30,15);
             o_ctx.insert(monster);o_ctx.insert(m2);o_ctx.insert(m3);
             o_ctx.flush();
+            m2=new Monster('d',2000,300,30);
+            o_ctx.insert(m2);o_ctx.flush();
+            m2=new Monster('e',800,100,30);
+            o_ctx.insert(m2);o_ctx.flush();
+            m2=new Monster('f',3000,500,300);
+            o_ctx.insert(m2);o_ctx.flush();
+        }
+
+        List<Supply> sup=o_ctx.query(o_ctx.where(Supply.class));
+        if(sup.size()==0){
+            Supply supply=new Supply('s',0,0,100,0,0,0);
+            o_ctx.insert(supply);o_ctx.flush();
+            Supply supply2=new Supply('t',0,100,0,0,0,0);
+            o_ctx.insert(supply2);o_ctx.flush();
+            Supply supply3=new Supply('u',0,50,0,0,0,0);
+            o_ctx.insert(supply3);o_ctx.flush();
+            Supply supply4=new Supply('v',0,20,0,0,0,0);
+            o_ctx.insert(supply4);o_ctx.flush();
+            Supply supply5=new Supply('w',0,0,50,0,0,0);
+            o_ctx.insert(supply5);o_ctx.flush();
+            Supply supply6=new Supply('x',0,0,20,0,0,0);
+            o_ctx.insert(supply6);o_ctx.flush();
+            Supply supply7=new Supply('y',400,0,0,0,0,0);
+            o_ctx.insert(supply7);o_ctx.flush();
+            Supply supply8=new Supply('z',200,0,0,0,0,0);
+            o_ctx.insert(supply8);o_ctx.flush();
+            supply=new Supply('p',0,0,0,1,0,0);
+            o_ctx.insert(supply);o_ctx.flush();
+            supply=new Supply('q',0,0,0,0,1,0);
+            o_ctx.insert(supply);o_ctx.flush();
+            supply=new Supply('r',0,0,0,0,0,1);
+            o_ctx.insert(supply);o_ctx.flush();
         }
     }
     public DirectionalLayout build_dl(int type){

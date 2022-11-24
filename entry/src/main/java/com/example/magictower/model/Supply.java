@@ -8,6 +8,7 @@ import ohos.data.orm.annotation.PrimaryKey;
 public class Supply extends OrmObject {
     @PrimaryKey //将Hash设置为主键
     private Integer id;
+    public int kind;
     public int health;
     public int attack;
     public int shield;
@@ -15,9 +16,21 @@ public class Supply extends OrmObject {
     public int blue_key;
     public int yellow_key;
 
+    public int getKind() {
+        return kind;
+    }
+
+    public void setKind(int kind) {
+        this.kind = kind;
+    }
 
     public Supply(){}
-
+    public Supply(int kind,int health,int attack,int shield,int red_key,int blue_key,int yellow_key){
+        this.health=health;this.attack=attack;
+        this.shield=shield;this.red_key=red_key;
+        this.blue_key=blue_key;this.yellow_key=yellow_key;
+        this.kind=kind;
+    }
     public Integer getId() {
         return id;
     }
