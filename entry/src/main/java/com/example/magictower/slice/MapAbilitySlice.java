@@ -206,31 +206,14 @@ public class MapAbilitySlice extends AbilitySlice {
             update_move();
         }
     }
+    public void attack(){
+
+    }
     public boolean update_move(){
         int x=hero.getX(),y=hero.getY();
         hero_img.setContentPositionX(mp[x][y].getContentPositionX());hero_img.setContentPositionY(mp[x][y].getContentPositionY());
         return true;
     }
-//    public void show_dialog(){
-//        CommonDialog cd=new CommonDialog(this);
-//        cd.setAutoClosable(true);
-//        DirectionalLayout dl2=build_dl(0);
-//        ScrollView sv=new ScrollView(this);
-//        sv.setHeight(AttrHelper.vp2px(600,getContext()));
-//        sv.setHeight(AttrHelper.vp2px(600,getContext()));
-//        sv.setWidth(ComponentContainer.LayoutConfig.MATCH_CONTENT);
-//
-//        Text content= new Text(this);
-//        //set_but_back(content,220,220,220);
-//        content.setTextSize(50);content.setMultipleLine(true);
-//        content.setText(""
-//        );
-//
-//        sv.addComponent(content);
-//        dl2.addComponent(sv);
-//        cd.setContentCustomComponent(dl2);
-//        cd.show();
-//    }
     public DirectionalLayout build_dl(int type){
         DirectionalLayout dl=new DirectionalLayout(this);
         if(type==0)dl.setOrientation(Component.VERTICAL);else dl.setOrientation(Component.HORIZONTAL);
