@@ -4,6 +4,7 @@ import com.example.magictower.model.Hero;
 import com.example.magictower.ResourceTable;
 import com.example.magictower.model.Map;
 import com.example.magictower.model.Map_db;
+import com.example.magictower.model.Monster;
 import ohos.aafwk.ability.AbilitySlice;
 import ohos.aafwk.content.Intent;
 import ohos.agp.components.*;
@@ -11,15 +12,20 @@ import ohos.agp.components.element.PixelMapElement;
 import ohos.agp.utils.LayoutAlignment;
 import ohos.agp.window.dialog.CommonDialog;
 import ohos.agp.window.dialog.IDialog;
+import ohos.agp.window.dialog.ToastDialog;
+import ohos.app.Context;
 import ohos.data.DatabaseHelper;
 import ohos.data.orm.OrmContext;
 import ohos.global.resource.NotExistException;
 import ohos.global.resource.Resource;
 
+
 import java.io.IOException;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
-public class MapAbilitySlice extends AbilitySlice {
+public class MapAbilitySlice extends AbilitySlice{
     int cnt=10;
     Image [] [] mp=new Image[cnt][cnt];
     Hero hero;
@@ -27,6 +33,7 @@ public class MapAbilitySlice extends AbilitySlice {
     int dx,dy;
     OrmContext o_ctx;
     Map info;String info_s;
+    Context ctx;
     public int get_resource(char c){
         switch (c){
             case '0':
@@ -54,13 +61,16 @@ public class MapAbilitySlice extends AbilitySlice {
         }
     }
     int new_x,new_y;
+    DirectionalLayout dl;
     @Override
     public void onStart(Intent intent) {
+        System.out.println("begin");
         super.onStart(intent);
         //super.setUIContent(ResourceTable.Layout_MapAbility);
         //hero=new Hero(1000,30,10,1,1,1,1,1,1,1);
         hero_img=new Image(this);
-        DirectionalLayout dl=(DirectionalLayout) LayoutScatter.getInstance(this).parse(ResourceTable.Layout_MapAbility,null,false);
+        ctx=getContext();
+        dl=(DirectionalLayout) LayoutScatter.getInstance(this).parse(ResourceTable.Layout_MapAbility,null,false);
         //DirectionalLayout dl=new DirectionalLayout(this);
         dl.setAlignment(LayoutAlignment.HORIZONTAL_CENTER);
 
@@ -74,6 +84,7 @@ public class MapAbilitySlice extends AbilitySlice {
         List<Map> data=o_ctx.query(o_ctx.where(Map.class) );
         List<Hero> heroes=o_ctx.query(o_ctx.where(Hero.class));
         hero=heroes.get(0);
+        update_ui();
         info=data.get(0);
         info_s=info.getS();
         //获取到宽度
@@ -171,10 +182,35 @@ public class MapAbilitySlice extends AbilitySlice {
         });
         super.setUIContent(dl);
     }
+    //更新英雄的显示状态
+    public void update_ui(){
+        Text health=(Text) dl.findComponentById(ResourceTable.Id_health);
+        Text attack=(Text) dl.findComponentById(ResourceTable.Id_attack);
+        Text defence=(Text) dl.findComponentById(ResourceTable.Id_defence);
+        Text level=(Text) dl.findComponentById(ResourceTable.Id_level);
+        Text rk=(Text) dl.findComponentById(ResourceTable.Id_red_key);
+        Text bk=(Text) dl.findComponentById(ResourceTable.Id_blue_key);
+        Text yk=(Text) dl.findComponentById(ResourceTable.Id_yellow_key);
+        Text st=(Text) dl.findComponentById(ResourceTable.Id_stair);
+        health.setText(String.valueOf(hero.getHealth() ) );
+        attack.setText(String.valueOf(hero.getAttack() ) );
+        defence.setText(String.valueOf(hero.getDefence()));
+        level.setText(String.valueOf(hero.getLevel() ));
+        rk.setText(String.valueOf(hero.getRed_k()));
+        bk.setText(String.valueOf(hero.getBlue_k()));
+        yk.setText(String.valueOf(hero.getYellow_k()));
+        st.setText(String.valueOf(hero.getStair()));
+    }
     int fg;
+    Monster monster;
     public void interact(){
         int x=new_x,y=new_y;
         if(info_s.charAt(new_x*10+new_y)>='a') {
+            //获取到是哪种怪物
+            List<Monster> monsters=o_ctx.query(o_ctx.where(Monster.class).equalTo("kind",'a'));
+            if(monsters.size()>=1)
+                monster=monsters.get(0);
+            //显示提示界面
             CommonDialog cd=new CommonDialog(getContext());
             cd.setAutoClosable(true);
             cd.setContentText("是否要攻击敌人？");
@@ -187,6 +223,13 @@ public class MapAbilitySlice extends AbilitySlice {
             cd.setButton(2, "是", new IDialog.ClickedListener() {
                 @Override
                 public void onClick(IDialog iDialog, int i) {
+                    try {
+                        show_status();
+                        attack();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    //杀了怪物以后，怪物位置变成可以行走的土地
                     String new_s=new String();
                     for(int j=0;j<info_s.length();j++){
                         if(j==x*10+y) new_s+='0';
@@ -206,9 +249,63 @@ public class MapAbilitySlice extends AbilitySlice {
             update_move();
         }
     }
-    public void attack(){
+    DirectionalLayout show_l;
+    public void update_show(){
+        Text health=(Text) show_l.findComponentById(ResourceTable.Id_status_health);
+        Text attack=(Text) dl.findComponentById(ResourceTable.Id_status_attack);
+        Text defence=(Text) dl.findComponentById(ResourceTable.Id_status_defence);
+        health.setText(String.valueOf(hero.getHealth() ) );
+        attack.setText(String.valueOf(hero.getAttack() ) );
+        defence.setText(String.valueOf(hero.getDefence()));
+
+        Text health2=(Text) show_l.findComponentById(ResourceTable.Id_status_health_monster);
+        Text attack2=(Text) dl.findComponentById(ResourceTable.Id_status_attack_monster);
+        Text defence2=(Text) dl.findComponentById(ResourceTable.Id_status_defence_monster);
+        health2.setText(String.valueOf(monster.getHealth() ) );
+        attack2.setText(String.valueOf(monster.getAttack() ) );
+        defence2.setText(String.valueOf(monster.getDefence()));
 
     }
+    //互相攻击，首先显示状态页面，然后每隔一段时间update
+    public void show_status(){
+        CommonDialog cd=new CommonDialog(getContext());
+        show_l= (DirectionalLayout) LayoutScatter.getInstance(getContext()).parse(ResourceTable.Layout_status,null,false);
+        update_show();
+        cd.setAutoClosable(true);
+        cd.setContentCustomComponent(show_l);
+        cd.show();
+    }
+    public void attack() throws InterruptedException {
+        TimerTask timerTask=new TimerTask() {
+            @Override
+            public void run() {
+//                System.out.println("try ok?");
+//                int atk1=hero.getAttack(),atk2=monster.getAttack();
+//                int def1=hero.getDefence(),def2=hero.getDefence();
+//                int heal1=hero.getHealth(),heal2=hero.getHealth();
+//                heal1-= Math.max(0, atk2 - def1);
+//                heal2-=Math.max(0,atk1-def2);
+//                if(heal1<0){
+//                    CommonDialog cd=new CommonDialog(getContext());
+//                    cd.setContentText("你死了！");
+//                    cd.setButton(1, "确定", new IDialog.ClickedListener() {
+//                        @Override
+//                        public void onClick(IDialog iDialog, int i) {
+//                            cd.destroy();terminate();
+//                        }
+//                    });
+//                }
+//                monster.setHealth(heal2);hero.setHealth(heal1);
+//                update_show();
+                //update_move();
+            }
+        };
+        Timer timer=new Timer();
+        //while(monster.getHealth()>0){
+            timer.schedule(timerTask,500);
+        //}
+    }
+
     public boolean update_move(){
         int x=hero.getX(),y=hero.getY();
         hero_img.setContentPositionX(mp[x][y].getContentPositionX());hero_img.setContentPositionY(mp[x][y].getContentPositionY());

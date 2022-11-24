@@ -37,7 +37,7 @@
         <Text
             ohos:height="20vp"
             ohos:width="50vp"
-            ohos:text="30"
+            ohos:text="40"
             ohos:text_size="20vp"
             ohos:id="$+id:attack"
             ohos:right_of="$id:sword"

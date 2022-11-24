@@ -4,6 +4,7 @@ import com.example.magictower.model.Hero;
 import com.example.magictower.model.Map;
 import com.example.magictower.model.Map_db;
 import com.example.magictower.ResourceTable;
+import com.example.magictower.model.Monster;
 import ohos.aafwk.ability.AbilitySlice;
 import ohos.aafwk.content.Intent;
 import ohos.agp.colors.RgbColor;
@@ -79,13 +80,18 @@ public class MainAbilitySlice extends AbilitySlice {
         for(int i=0;i<10;i++)
                 for(int j=0;j<10;j++)
                     s+=map1[i][j];
-        Hero hero= new Hero(1000,30,10,1,1,1,1,1,0,4);
+        Hero hero= new Hero(1000,30,15,1,1,1,1,1,0,4);
         Map mp=new Map();
         mp.setS(s);mp.setLevel(1);
         o_ctx.insert(hero);o_ctx.insert(mp);
         o_ctx.flush();
 
-
+        List<Monster> monsters=o_ctx.query(o_ctx.where(Monster.class));
+        if(monsters.size()==0){
+            Monster monster=new Monster('a',200,20,10);
+            o_ctx.insert(monster);
+            o_ctx.flush();
+        }
     }
     public DirectionalLayout build_dl(int type){
         DirectionalLayout dl=new DirectionalLayout(this);
