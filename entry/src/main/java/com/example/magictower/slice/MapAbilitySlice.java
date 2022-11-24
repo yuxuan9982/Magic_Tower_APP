@@ -37,6 +37,7 @@ public class MapAbilitySlice extends AbilitySlice{
     Map info;String info_s;
     Context ctx;
     public int get_resource(char c){
+        //根据类型，判断应该给什么样的背景图片
         switch (c){
             case '0':
                 return ResourceTable.Media_ground;
@@ -44,8 +45,13 @@ public class MapAbilitySlice extends AbilitySlice{
                 return ResourceTable.Media_wall;
             case '2':
             case '3':
-            case '4':
                 return ResourceTable.Media_stair;
+            case '4':
+                return ResourceTable.Media_red_door;
+            case '5':
+                return ResourceTable.Media_blue_door;
+            case '6':
+                return ResourceTable.Media_yellow_door;
             case 'a':
                 return ResourceTable.Media_skeleton;
         }
@@ -86,7 +92,7 @@ public class MapAbilitySlice extends AbilitySlice{
         List<Map> data=o_ctx.query(o_ctx.where(Map.class) );
         List<Hero> heroes=o_ctx.query(o_ctx.where(Hero.class));
         hero=heroes.get(0);
-        update_ui();
+        update_all();
         info=data.get(0);
         info_s=info.getS();
         //获取到宽度
@@ -184,29 +190,48 @@ public class MapAbilitySlice extends AbilitySlice{
         });
         super.setUIContent(dl);
     }
-    //更新英雄的显示状态
-    public void update_ui(){
-        Text health=(Text) dl.findComponentById(ResourceTable.Id_health);
-        Text attack=(Text) dl.findComponentById(ResourceTable.Id_attack);
-        Text defence=(Text) dl.findComponentById(ResourceTable.Id_defence);
-        Text level=(Text) dl.findComponentById(ResourceTable.Id_level);
+    //更新英雄的显示状态，所有状态
+    public void update_rk(){
         Text rk=(Text) dl.findComponentById(ResourceTable.Id_red_key);
-        Text bk=(Text) dl.findComponentById(ResourceTable.Id_blue_key);
-        Text yk=(Text) dl.findComponentById(ResourceTable.Id_yellow_key);
-        Text st=(Text) dl.findComponentById(ResourceTable.Id_stair);
-        health.setText(String.valueOf(hero.getHealth() ) );
-        attack.setText(String.valueOf(hero.getAttack() ) );
-        defence.setText(String.valueOf(hero.getDefence()));
-        level.setText(String.valueOf(hero.getLevel() ));
         rk.setText(String.valueOf(hero.getRed_k()));
+    }
+    public void update_bk(){
+        Text bk=(Text) dl.findComponentById(ResourceTable.Id_blue_key);
         bk.setText(String.valueOf(hero.getBlue_k()));
+    }
+    public void update_yk(){
+        Text yk=(Text) dl.findComponentById(ResourceTable.Id_yellow_key);
         yk.setText(String.valueOf(hero.getYellow_k()));
+    }
+    public void update_st(){
+        Text st=(Text) dl.findComponentById(ResourceTable.Id_stair);
         st.setText(String.valueOf(hero.getStair()));
+    }
+    public void update_heal(){
+        Text health=(Text) dl.findComponentById(ResourceTable.Id_health);
+        health.setText(String.valueOf(hero.getHealth() ) );
+    }
+    public void update_attack(){
+        Text attack=(Text) dl.findComponentById(ResourceTable.Id_attack);
+        attack.setText(String.valueOf(hero.getAttack() ) );
+    }
+    public void update_defence(){
+        Text defence=(Text) dl.findComponentById(ResourceTable.Id_defence);
+        defence.setText(String.valueOf(hero.getDefence()));
+    }
+    public void update_level(){
+        Text level=(Text) dl.findComponentById(ResourceTable.Id_level);
+        level.setText(String.valueOf(hero.getLevel() ));
+    }
+    public void update_all(){
+        update_rk();update_bk();update_yk();update_st();update_heal();update_attack();update_defence();update_level();
     }
     int fg;
     Monster monster;
+    //走一步需要的可能的交互情况
     public void interact(){
         int x=new_x,y=new_y;
+        char c=info_s.charAt(x*10+y);
         if(info_s.charAt(new_x*10+new_y)>='a') {
             //获取到是哪种怪物
             List<Monster> monsters=o_ctx.query(o_ctx.where(Monster.class).equalTo("kind",'a'));
@@ -226,13 +251,7 @@ public class MapAbilitySlice extends AbilitySlice{
                 @Override
                 public void onClick(IDialog iDialog, int i) {
                     show_status();
-                    //杀了怪物以后，怪物位置变成可以行走的土地
-                    String new_s=new String();
-                    //把字符串改了，字符串不支持直接修改，勉强这样改吧，反正常数也就100多
-                    for(int j=0;j<info_s.length();j++){
-                        if(j==x*10+y) new_s+='0';else new_s+= info_s.charAt(j);
-                    }
-                    info_s=new_s;set_Background(mp[x][y],ResourceTable.Media_ground);
+                    change_info(x,y,'0');
                     new_x=hero.getX();new_y=hero.getY();
                     //点了就销毁
                     cd.destroy();
@@ -244,7 +263,42 @@ public class MapAbilitySlice extends AbilitySlice{
         }else if(info_s.charAt(x*10+y)=='0'){
             hero.setX(new_x);hero.setY(new_y);
             update_move();
+        }else if(c=='4'){
+            if(hero.getRed_k()<=0){
+                //开不了门
+                ToastDialog td=new ToastDialog(getContext());td.setText("钥匙不足");td.show();
+            }else{
+                //能开门
+                ToastDialog td=new ToastDialog(getContext());td.setText("开锁成功");td.show();
+                hero.setRed_k(hero.getRed_k()-1);change_info(x,y,'0');reset_pos();
+            }
+        } else if (c == '5') {
+            if(hero.getBlue_k()<=0){
+                ToastDialog td=new ToastDialog(getContext());td.setText("钥匙不足");td.show();
+            }else{
+                ToastDialog td=new ToastDialog(getContext());td.setText("开锁成功");td.show();
+                hero.setBlue_k(hero.getBlue_k()-1);change_info(x,y,'0');reset_pos();
+            }
+        }else if (c=='6'){
+            if(hero.getYellow_k()<=0){
+                ToastDialog td=new ToastDialog(getContext());td.setText("钥匙不足");td.show();
+            }else{
+                ToastDialog td=new ToastDialog(getContext());td.setText("开锁成功");td.show();
+                hero.setYellow_k(hero.getYellow_k()-1);change_info(x,y,'0');reset_pos();
+            }
         }
+    }
+    public void reset_pos(){
+        new_x=hero.getX();new_y=hero.getY();
+    }
+    public void change_info(int x,int y,char c){
+        //杀了怪物以后，怪物位置变成可以行走的土地
+        String new_s=new String();
+        //把字符串改了，字符串不支持直接修改，勉强这样改吧，反正常数也就100多
+        for(int j=0;j<info_s.length();j++){
+            if(j==x*10+y) new_s+='0';else new_s+= info_s.charAt(j);
+        }
+        info_s=new_s;set_Background(mp[x][y],ResourceTable.Media_ground);
     }
     DirectionalLayout show_l;
     public void update_show(){
@@ -277,7 +331,8 @@ public class MapAbilitySlice extends AbilitySlice{
         int need=Math.min((hero.getHealth()+dmg2-1)/dmg2,(monster.health+dmg1-1)/dmg1);
         begin_h1=hero.getHealth();begin_h2=monster.getHealth();
         end_h1=begin_h1-need*dmg2;end_h2=begin_h2-need*dmg1;
-
+        Image img=(Image) show_l.findComponentById(ResourceTable.Id_status_monster);
+        set_Background(img,get_resource(info_s.charAt(10*new_x+new_y)));
         AnimatorValue animatorValue=new AnimatorValue();
         animatorValue.setDuration(1000);
         animatorValue.setValueUpdateListener(new AnimatorValue.ValueUpdateListener() {
@@ -305,7 +360,7 @@ public class MapAbilitySlice extends AbilitySlice{
                     }
                     hero.setHealth(end_h1);
                     monster.setHealth(end_h2);
-                    update_ui();
+                    update_heal();
                 }
             }
 

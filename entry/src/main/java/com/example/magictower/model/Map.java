@@ -8,7 +8,7 @@ import ohos.data.orm.annotation.PrimaryKey;
 public class Map extends OrmObject {
     @PrimaryKey //将Hash设置为主键
     private Integer id;
-    int level;
+    int level,s_x,s_y;
     String s;
     public Integer getId() {
         return id;
@@ -32,5 +32,21 @@ public class Map extends OrmObject {
 
     public void setLevel(int level) {
         this.level = level;
+    }
+
+    public int getS_x() {
+        return s_x;
+    }
+
+    public void setS_x(int s_x) {
+        this.s_x = s_x;
+    }
+
+    public int getS_y() {
+        return s_y;
+    }
+
+    public void setS_y(int s_y) {
+        this.s_y = s_y;
     }
 }
