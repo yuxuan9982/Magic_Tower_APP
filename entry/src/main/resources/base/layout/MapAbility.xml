@@ -81,7 +81,6 @@
             />
 
 
-
         <Image
             ohos:height="20vp"
             ohos:width="20vp"
@@ -170,6 +169,28 @@
             ohos:left_margin="5vp"
             ohos:top_margin="20vp"
             />
+
+        <Image
+            ohos:height="20vp"
+            ohos:width="20vp"
+            ohos:background_element="$media:money"
+            ohos:id="$+id:money_img"
+            ohos:top_margin="20vp"
+            ohos:below="$id:red_key"
+            />
+
+        <Text
+            ohos:height="20vp"
+            ohos:width="100vp"
+            ohos:text="1"
+            ohos:text_size="20vp"
+            ohos:id="$+id:money"
+            ohos:below="$id:red_key"
+            ohos:right_of="$id:money_img"
+            ohos:left_margin="5vp"
+            ohos:top_margin="20vp"
+            />
+
 
     </DependentLayout>
 

@@ -246,8 +246,12 @@ public class MapAbilitySlice extends AbilitySlice{
         Text level=(Text) dl.findComponentById(ResourceTable.Id_level);
         level.setText(String.valueOf(hero.getLevel() ));
     }
+    public void update_money(){
+        Text money=(Text) dl.findComponentById(ResourceTable.Id_money);
+        money.setText(String.valueOf(hero.getMoney()));
+    }
     public void update_all(){
-        update_rk();update_bk();update_yk();update_st();update_heal();update_attack();update_defence();update_level();
+        update_rk();update_bk();update_yk();update_st();update_heal();update_attack();update_defence();update_level();update_money();
     }
     int fg;
     Monster monster;
@@ -413,7 +417,8 @@ public class MapAbilitySlice extends AbilitySlice{
                     }
                     hero.setHealth(end_h1);
                     monster.setHealth(end_h2);
-                    update_heal();
+                    hero.setMoney(hero.getMoney()+monster.getMoney());
+                    update_heal();update_money();
                 }
             }
 

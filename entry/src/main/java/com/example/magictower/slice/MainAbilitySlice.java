@@ -61,7 +61,7 @@ public class MainAbilitySlice extends AbilitySlice {
     }
     public void init_gragh(){
         //初始化英雄
-        Hero hero= new Hero(1000,30,15,1,1,1,1,1,0,4);
+        Hero hero= new Hero(1000,30,15,1,1,1,1,1,0,4,50);
         o_ctx.insert(hero);o_ctx.flush();
         //初始化地图
         char[][] map1={
@@ -104,16 +104,16 @@ public class MainAbilitySlice extends AbilitySlice {
 
         List<Monster> monsters=o_ctx.query(o_ctx.where(Monster.class));
         if(monsters.size()==0){
-            Monster monster=new Monster('a',200,20,10);
-            Monster m2=new Monster('b',100,10,5);
-            Monster m3=new Monster('c',400,30,15);
+            Monster monster=new Monster('a',200,20,10,5);
+            Monster m2=new Monster('b',100,10,5,2);
+            Monster m3=new Monster('c',400,30,15,10);
             o_ctx.insert(monster);o_ctx.insert(m2);o_ctx.insert(m3);
             o_ctx.flush();
-            m2=new Monster('d',2000,300,30);
+            m2=new Monster('d',2000,300,30,500);
             o_ctx.insert(m2);o_ctx.flush();
-            m2=new Monster('e',800,100,30);
+            m2=new Monster('e',800,100,30,100);
             o_ctx.insert(m2);o_ctx.flush();
-            m2=new Monster('f',3000,500,300);
+            m2=new Monster('f',3000,500,300,9999);
             o_ctx.insert(m2);o_ctx.flush();
         }
 

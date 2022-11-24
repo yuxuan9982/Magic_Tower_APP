@@ -13,12 +13,20 @@ public class Monster extends OrmObject {
     public int health;
     public int attack;
     public int defence;
+    public int money;
     public Monster(){}
     public Monster(char kind,int health,int attack,int defence){
         this.kind=(int)kind;
         this.health=health;
         this.attack=attack;
         this.defence=defence;
+    }
+    public Monster(char kind,int health,int attack,int defence,int money){
+        this.kind=(int)kind;
+        this.health=health;
+        this.attack=attack;
+        this.defence=defence;
+        this.money=money;
     }
     public Integer getId() {
         return id;
@@ -54,6 +62,14 @@ public class Monster extends OrmObject {
 
     public int getDefence() {
         return defence;
+    }
+
+    public int getMoney() {
+        return money;
+    }
+
+    public void setMoney(int money) {
+        this.money = money;
     }
 
     public void setDefence(int defence) {
