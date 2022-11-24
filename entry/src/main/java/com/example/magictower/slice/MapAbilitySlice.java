@@ -31,11 +31,9 @@ public class MapAbilitySlice extends AbilitySlice{
     int cnt=10;
     Image [] [] mp=new Image[cnt][cnt];
     Hero hero;
-    Image hero_img;
     int dx,dy;
     OrmContext o_ctx;
     Map info;String info_s;
-    Context ctx;
     public int get_resource(char c){
         //根据类型，判断应该给什么样的背景图片
         switch (c){
@@ -54,6 +52,27 @@ public class MapAbilitySlice extends AbilitySlice{
                 return ResourceTable.Media_yellow_door;
             case 'a':
                 return ResourceTable.Media_skeleton;
+            case 'b':
+                return ResourceTable.Media_slime;
+            case 'c':
+                return ResourceTable.Media_skeleton_warrior;
+            case 's':
+                return ResourceTable.Media_god_shield;
+            case 't':
+                return ResourceTable.Media_god_sword;
+            case 'u':
+                return ResourceTable.Media_big_sword;
+            case 'v':
+                return ResourceTable.Media_small_sword;
+            case 'w':
+                return ResourceTable.Media_big_shield;
+            case 'x':
+                return ResourceTable.Media_small_shield;
+            case 'y':
+                return ResourceTable.Media_big_blood;
+            case 'z':
+                return ResourceTable.Media_small_blood;
+
         }
         return 0;
     }
@@ -76,25 +95,32 @@ public class MapAbilitySlice extends AbilitySlice{
         super.onStart(intent);
         //super.setUIContent(ResourceTable.Layout_MapAbility);
         //hero=new Hero(1000,30,10,1,1,1,1,1,1,1);
-        hero_img=new Image(this);
-        ctx=getContext();
+
+        DatabaseHelper helper=new DatabaseHelper(this);
+        o_ctx=helper.getOrmContext("database","database.db", Map_db.class);
+        List<Hero> heroes=o_ctx.query(o_ctx.where(Hero.class));
+        hero=heroes.get(0);
+//        info=o_ctx.query(o_ctx.where(Map.class).equalTo("level",hero.getLevel()) );
+        List<Map> data=o_ctx.query(o_ctx.where(Map.class) );
+
+        for (int i=0;i<data.size();i++){
+            if(data.get(i).getLevel()==hero.getStair()){
+                info=data.get(i);
+            }
+        }
+        info_s=info.getS();
+
+        hero.setX(info.getS_x());hero.setY(info.getS_y());
+
+
         dl=(DirectionalLayout) LayoutScatter.getInstance(this).parse(ResourceTable.Layout_MapAbility,null,false);
         //DirectionalLayout dl=new DirectionalLayout(this);
         dl.setAlignment(LayoutAlignment.HORIZONTAL_CENTER);
-
+        update_all();
 
         TableLayout tl=new TableLayout(this);
         tl.setRowCount(cnt);tl.setColumnCount(cnt);
 
-        DatabaseHelper helper=new DatabaseHelper(this);
-        o_ctx=helper.getOrmContext("database","database.db", Map_db.class);
-//        info=o_ctx.query(o_ctx.where(Map.class).equalTo("level",hero.getLevel()) );
-        List<Map> data=o_ctx.query(o_ctx.where(Map.class) );
-        List<Hero> heroes=o_ctx.query(o_ctx.where(Hero.class));
-        hero=heroes.get(0);
-        update_all();
-        info=data.get(0);
-        info_s=info.getS();
         //获取到宽度
         int tot_width= getLayoutParams().width;
         dx=dy=tot_width/cnt;
@@ -103,14 +129,15 @@ public class MapAbilitySlice extends AbilitySlice{
         for(int i=0;i<cnt;i++){
             for(int j=0;j<cnt;j++){
                 mp[i][j]=new Image(this);
-                set_Background(mp[i][j],ResourceTable.Media_ground);
                 set_Background(mp[i][j],get_resource(info_s.charAt(i*10+j) ) );
+                if(i==hero.getX()&&j==hero.getY()){
+                    set_Background(mp[i][j],ResourceTable.Media_hero );
+                }
                 mp[i][j].setWidth(tot_width/cnt);
                 mp[i][j].setHeight(tot_width/cnt);
                 tl.addComponent(mp[i][j]);
             }
         }
-        tl.addComponent(hero_img);
         dl.addComponent(tl);
 
         Image up=new Image(this),down=new Image(this),left=new Image(this),right=new Image(this);
@@ -148,20 +175,7 @@ public class MapAbilitySlice extends AbilitySlice{
         dl.addComponent(down);
 
 
-        hero_img.setWidth(tot_width/cnt);
-        hero_img.setHeight(tot_width/cnt);
-        hero_img.setVisibility(Component.INVISIBLE);
-
-        set_Background(hero_img,ResourceTable.Media_hero);
-
         set_Background(start,ResourceTable.Media_start2);
-        start.setClickedListener(o->{
-            hero_img.setVisibility(Component.VISIBLE);
-            int x=hero.getX(),y=hero.getY();
-            hero_img.setContentPositionX(mp[x][y].getContentPositionX());hero_img.setContentPositionY(mp[x][y].getContentPositionY());
-            //sx=sy=0;
-            //hero.setX(0);hero.setY(0);
-        });
         new_x=hero.getX();new_y=hero.getY();
         //上下左右分别添加响应
         up.setClickedListener(o->{
@@ -232,9 +246,9 @@ public class MapAbilitySlice extends AbilitySlice{
     public void interact(){
         int x=new_x,y=new_y;
         char c=info_s.charAt(x*10+y);
-        if(info_s.charAt(new_x*10+new_y)>='a') {
+        if(c>='a'&&c<='s') {
             //获取到是哪种怪物
-            List<Monster> monsters=o_ctx.query(o_ctx.where(Monster.class).equalTo("kind",'a'));
+            List<Monster> monsters=o_ctx.query(o_ctx.where(Monster.class).equalTo("kind",info_s.charAt(new_x*10+new_y)));
             if(monsters.size()>=1)
                 monster=monsters.get(0);
             //显示提示界面
@@ -261,9 +275,9 @@ public class MapAbilitySlice extends AbilitySlice{
         }else if(info_s.charAt(x*10+y)=='1'){
             new_x=hero.getX();new_y=hero.getY();return ;
         }else if(info_s.charAt(x*10+y)=='0'){
-            hero.setX(new_x);hero.setY(new_y);
             update_move();
         }else if(c=='4'){
+            reset_pos();
             if(hero.getRed_k()<=0){
                 //开不了门
                 ToastDialog td=new ToastDialog(getContext());td.setText("钥匙不足");td.show();
@@ -273,6 +287,7 @@ public class MapAbilitySlice extends AbilitySlice{
                 hero.setRed_k(hero.getRed_k()-1);change_info(x,y,'0');reset_pos();
             }
         } else if (c == '5') {
+            reset_pos();
             if(hero.getBlue_k()<=0){
                 ToastDialog td=new ToastDialog(getContext());td.setText("钥匙不足");td.show();
             }else{
@@ -280,12 +295,31 @@ public class MapAbilitySlice extends AbilitySlice{
                 hero.setBlue_k(hero.getBlue_k()-1);change_info(x,y,'0');reset_pos();
             }
         }else if (c=='6'){
+            reset_pos();
             if(hero.getYellow_k()<=0){
                 ToastDialog td=new ToastDialog(getContext());td.setText("钥匙不足");td.show();
             }else{
                 ToastDialog td=new ToastDialog(getContext());td.setText("开锁成功");td.show();
-                hero.setYellow_k(hero.getYellow_k()-1);change_info(x,y,'0');reset_pos();
+                hero.setYellow_k(hero.getYellow_k()-1);
+                change_info(x,y,'0');
             }
+
+        }else if(c=='3'){
+            hero.setStair(hero.getStair()+1);
+            Intent in1=new Intent();
+            MapAbilitySlice slice=new MapAbilitySlice();
+            o_ctx.update(hero);o_ctx.flush();
+            info.setS(info_s);o_ctx.update(info);o_ctx.flush();
+            present(slice,in1);
+            terminate();
+        }else if(c=='2'){
+            hero.setStair(hero.getStair()-1);
+            Intent in1=new Intent();
+            MapAbilitySlice slice=new MapAbilitySlice();
+            o_ctx.update(hero);o_ctx.flush();
+            info.setS(info_s);o_ctx.update(info);o_ctx.flush();
+            present(slice,in1);
+            terminate();
         }
     }
     public void reset_pos(){
@@ -367,9 +401,12 @@ public class MapAbilitySlice extends AbilitySlice{
         });
         animatorValue.start();
     }
+    //这里后面要加动画
     public boolean update_move(){
         int x=hero.getX(),y=hero.getY();
-        hero_img.setContentPositionX(mp[x][y].getContentPositionX());hero_img.setContentPositionY(mp[x][y].getContentPositionY());
+        set_Background(mp[x][y],ResourceTable.Media_ground);
+        set_Background(mp[new_x][new_y],ResourceTable.Media_hero);
+        hero.setX(new_x);hero.setY(new_y);
         return true;
     }
     public DirectionalLayout build_dl(int type){
@@ -384,7 +421,6 @@ public class MapAbilitySlice extends AbilitySlice{
     public void onActive() {
         super.onActive();
     }
-
     @Override
     public void onForeground(Intent intent) {
         super.onForeground(intent);

@@ -65,7 +65,7 @@ public class MainAbilitySlice extends AbilitySlice {
     public void init_gragh(){
         //初始化英雄
         Hero hero= new Hero(1000,30,15,1,1,1,1,1,0,4);
-        o_ctx.insert(hero);
+        o_ctx.insert(hero);o_ctx.flush();
         //初始化地图
         char[][] map1={
                 {'1','1','1','1','0','1','1','1','1','1'},
@@ -74,8 +74,8 @@ public class MainAbilitySlice extends AbilitySlice {
                 {'1','1','1','1','0','1','1','1','1','1'},
                 {'1','1','1','1','0','1','1','1','1','1'},
                 {'1','1','1','1','0','1','1','1','1','1'},
-                {'1','1','1','1','6','1','1','1','1','1'},
-                {'1','1','0','0','5','a','0','0','1','1'},
+                {'1','1','1','1','b','1','1','1','1','1'},
+                {'1','1','0','0','c','a','0','0','1','1'},
                 {'1','1','1','0','4','0','1','1','1','1'},
                 {'1','1','1','1','3','1','1','1','1','1'}
         };
@@ -84,7 +84,7 @@ public class MainAbilitySlice extends AbilitySlice {
         Map mp=new Map();
         mp.setS_x(0);mp.setS_y(4);
         mp.setS(s);mp.setLevel(1);
-        o_ctx.insert(mp);
+        o_ctx.insert(mp);o_ctx.flush();
 
         char[][] map2={
                 {'3','0','0','0','0','0','0','0','0','0'},
@@ -100,17 +100,17 @@ public class MainAbilitySlice extends AbilitySlice {
         };
         Map mp2=new Map();
         String s2=new String();
-        for(int i=0;i<10;i++) for(int j=0;j<10;j++) s2+=map1[i][j];
-        mp2.setS(s2);mp.setLevel(2);
+        for(int i=0;i<10;i++) for(int j=0;j<10;j++) s2+=map2[i][j];
+        mp2.setS(s2);mp2.setLevel(2);
         mp2.setS_x(8);mp2.setS_y(4);
-        o_ctx.insert(mp2);
-
-        o_ctx.flush();
+        o_ctx.insert(mp2);o_ctx.flush();
 
         List<Monster> monsters=o_ctx.query(o_ctx.where(Monster.class));
         if(monsters.size()==0){
             Monster monster=new Monster('a',200,20,10);
-            o_ctx.insert(monster);
+            Monster m2=new Monster('b',100,10,5);
+            Monster m3=new Monster('c',400,30,15);
+            o_ctx.insert(monster);o_ctx.insert(m2);o_ctx.insert(m3);
             o_ctx.flush();
         }
     }
