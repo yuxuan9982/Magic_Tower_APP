@@ -3,12 +3,21 @@
     xmlns:ohos="http://schemas.huawei.com/res/ohos"
     ohos:height="match_parent"
     ohos:width="match_parent"
+    ohos:background_element="#FF6A5ACD"
     ohos:orientation="vertical">
 
-
+    <Image
+        ohos:height="30vp"
+        ohos:width="30vp"
+        ohos:layout_alignment="right"
+        ohos:right_margin="20vp"
+        ohos:id="$+id:shop"
+        ohos:top_margin="5vp"
+        ohos:background_element="$media:shop"
+        />
     <DependentLayout
         ohos:height="match_content"
-        ohos:top_margin="40vp"
+        ohos:top_margin="5vp"
         ohos:left_margin="20vp"
         ohos:width="match_content">
         <Image
@@ -194,35 +203,5 @@
 
     </DependentLayout>
 
-<!--    <TableLayout-->
-<!--        ohos:height="match_content"-->
-<!--        ohos:width="match_parent"-->
-<!--        ohos:column_count="12"-->
-<!--        ohos:left_margin="20vp"-->
-<!--        ohos:top_margin="20vp"-->
-<!--        ohos:row_count="12"-->
-<!--        >-->
-<!--        <Image-->
-<!--            ohos:height="20vp"-->
-<!--            ohos:width="20vp"-->
-<!--            ohos:background_element="$media:ground"-->
-<!--            ohos:scale_mode="stretch"-->
-<!--            />-->
-<!--        <Image-->
-<!--            ohos:height="20vp"-->
-<!--            ohos:width="20vp"-->
-<!--            ohos:background_element="$media:ground"-->
-<!--            ohos:scale_mode="stretch"-->
-<!--            />-->
-
-
-    <Image
-        ohos:height="20vp"
-        ohos:width="20vp"
-        ohos:id="$+id:Hero"
-        ohos:background_element="$media:hero"
-        ohos:visibility="invisible"
-        />
-<!--    </TableLayout>-->
 
 </DirectionalLayout>

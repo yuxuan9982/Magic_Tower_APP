@@ -23,6 +23,18 @@
     {
       "name": "entry_MapAbility",
       "value": "entry_MapAbility"
+    },
+    {
+      "name": "shopping_description",
+      "value": "Java_Empty Ability"
+    },
+    {
+      "name": "shopping_HelloWorld",
+      "value": "Hello World"
+    },
+    {
+      "name": "entry_Shopping",
+      "value": "entry_Shopping"
     }
   ]
 }

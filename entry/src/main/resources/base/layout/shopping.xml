@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<DirectionalLayout
+    xmlns:ohos="http://schemas.huawei.com/res/ohos"
+    ohos:height="match_parent"
+    ohos:width="match_parent"
+    ohos:background_element="#FF6A5ACD"
+    ohos:alignment="horizontal_center"
+    ohos:orientation="vertical">
+
+    <Text
+        ohos:id="$+id:text_helloworld"
+        ohos:height="match_content"
+        ohos:width="match_content"
+        ohos:background_element="$graphic:background_shopping"
+        ohos:layout_alignment="horizontal_center"
+        ohos:text="商城"
+        ohos:text_size="40vp"
+        />
+
+    <DirectionalLayout
+        ohos:top_margin="20vp"
+        ohos:height="match_content"
+        ohos:orientation="horizontal"
+        ohos:width="match_content">
+        <Image
+            ohos:height="30vp"
+            ohos:width="30vp"
+            ohos:background_element="$media:yellow_key"/>
+        <Text
+            ohos:height="match_content"
+            ohos:width="match_content"
+            ohos:left_margin="5vp"
+            ohos:text_size="30vp"
+            ohos:id="$+id:get_yellow"
+            ohos:text="50金币"/>
+
+    </DirectionalLayout>
+    <DirectionalLayout
+        ohos:height="match_content"
+        ohos:orientation="horizontal"
+        ohos:width="match_content">
+        <Image
+            ohos:height="30vp"
+            ohos:width="30vp"
+            ohos:background_element="$media:blue_key"/>
+        <Text
+            ohos:height="match_content"
+            ohos:width="match_content"
+            ohos:left_margin="5vp"
+            ohos:text_size="30vp"
+            ohos:id="$+id:get_blue"
+            ohos:text="100金币"/>
+
+    </DirectionalLayout>
+
+    <DirectionalLayout
+        ohos:height="match_content"
+        ohos:orientation="horizontal"
+        ohos:width="match_content">
+        <Image
+            ohos:height="30vp"
+            ohos:width="30vp"
+            ohos:background_element="$media:red_key"/>
+        <Text
+            ohos:height="match_content"
+            ohos:width="match_content"
+            ohos:left_margin="5vp"
+            ohos:text_size="30vp"
+            ohos:id="$+id:get_red"
+            ohos:text="200金币"/>
+
+    </DirectionalLayout>
+
+    <DirectionalLayout
+        ohos:height="match_content"
+        ohos:orientation="horizontal"
+        ohos:width="match_content">
+        <Image
+            ohos:height="30vp"
+            ohos:width="30vp"
+            ohos:background_element="$media:small_sword"/>
+        <Text
+            ohos:height="match_content"
+            ohos:width="match_content"
+            ohos:left_margin="5vp"
+            ohos:text_size="30vp"
+            ohos:id="$+id:get_small_sword"
+            ohos:text="50金币"/>
+
+    </DirectionalLayout>
+
+    <DirectionalLayout
+        ohos:height="match_content"
+        ohos:orientation="horizontal"
+        ohos:width="match_content">
+        <Image
+            ohos:height="30vp"
+            ohos:width="30vp"
+            ohos:background_element="$media:big_sword"/>
+        <Text
+            ohos:height="match_content"
+            ohos:width="match_content"
+            ohos:left_margin="5vp"
+            ohos:text_size="30vp"
+            ohos:id="$+id:get_big_sword"
+            ohos:text="150金币"/>
+    </DirectionalLayout>
+
+    <DirectionalLayout
+        ohos:height="match_content"
+        ohos:orientation="horizontal"
+        ohos:width="match_content">
+        <Image
+            ohos:height="30vp"
+            ohos:width="30vp"
+            ohos:background_element="$media:small_shield"/>
+        <Text
+            ohos:height="match_content"
+            ohos:width="match_content"
+            ohos:left_margin="5vp"
+            ohos:text_size="30vp"
+            ohos:id="$+id:get_small_shield"
+            ohos:text="50金币"/>
+
+    </DirectionalLayout>
+
+    <DirectionalLayout
+        ohos:height="match_content"
+        ohos:orientation="horizontal"
+        ohos:width="match_content">
+        <Image
+            ohos:height="30vp"
+            ohos:width="30vp"
+            ohos:background_element="$media:big_shield"/>
+        <Text
+            ohos:height="match_content"
+            ohos:width="match_content"
+            ohos:left_margin="5vp"
+            ohos:text_size="30vp"
+            ohos:id="$+id:get_big_shield"
+            ohos:text="150金币"/>
+    </DirectionalLayout>
+
+    <DirectionalLayout
+        ohos:height="match_content"
+        ohos:orientation="horizontal"
+        ohos:width="match_content">
+        <Image
+            ohos:height="30vp"
+            ohos:width="30vp"
+            ohos:background_element="$media:small_blood"/>
+        <Text
+            ohos:height="match_content"
+            ohos:width="match_content"
+            ohos:left_margin="5vp"
+            ohos:text_size="30vp"
+            ohos:id="$+id:get_small_blood"
+            ohos:text="50金币"/>
+
+    </DirectionalLayout>
+
+    <DirectionalLayout
+        ohos:height="match_content"
+        ohos:orientation="horizontal"
+        ohos:width="match_content">
+        <Image
+            ohos:height="30vp"
+            ohos:width="30vp"
+            ohos:background_element="$media:big_blood"/>
+        <Text
+            ohos:height="match_content"
+            ohos:width="match_content"
+            ohos:left_margin="5vp"
+            ohos:text_size="30vp"
+            ohos:id="$+id:get_big_bllod"
+            ohos:text="80金币"/>
+    </DirectionalLayout>
+    <Button
+        ohos:top_margin="20vp"
+        ohos:height="match_content"
+        ohos:width="match_content"
+        ohos:id="$+id:ret"
+        ohos:text_size="30vp"
+        ohos:text="返回"
+        />
+</DirectionalLayout>

@@ -56,6 +56,16 @@
         "orientation": "unspecified",
         "visible": true,
         "type": "page"
+      },
+      {
+        "name": "com.example.magictower.Shopping",
+        "description": "$string:shopping_description",
+        "icon": "$media:icon",
+        "label": "$string:entry_Shopping",
+        "launchType": "standard",
+        "orientation": "unspecified",
+        "visible": true,
+        "type": "page"
       }
     ]
   }

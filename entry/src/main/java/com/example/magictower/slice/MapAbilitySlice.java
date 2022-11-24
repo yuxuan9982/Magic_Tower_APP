@@ -1,5 +1,6 @@
 package com.example.magictower.slice;
 
+import com.example.magictower.Shopping;
 import com.example.magictower.model.*;
 import com.example.magictower.ResourceTable;
 import ohos.aafwk.ability.AbilitySlice;
@@ -120,8 +121,6 @@ public class MapAbilitySlice extends AbilitySlice{
         info_s=info.getS();
 
         hero.setX(info.getS_x());hero.setY(info.getS_y());
-
-
         dl=(DirectionalLayout) LayoutScatter.getInstance(this).parse(ResourceTable.Layout_MapAbility,null,false);
         //DirectionalLayout dl=new DirectionalLayout(this);
         dl.setAlignment(LayoutAlignment.HORIZONTAL_CENTER);
@@ -211,8 +210,25 @@ public class MapAbilitySlice extends AbilitySlice{
                 interact();
             }
         });
+        Image img=(Image) dl.findComponentById(ResourceTable.Id_shop);
+        img.setClickedListener(o->{
+            o_ctx.update(hero);o_ctx.flush();
+            Intent intent1=new Intent();
+            ShoppingSlice slice=new ShoppingSlice();
+            presentForResult(slice,intent1,0);
+        });
         super.setUIContent(dl);
     }
+
+    @Override
+    protected void onResult(int requestCode, Intent resultIntent) {
+        if(requestCode==0){
+            List<Hero> heroList=o_ctx.query(o_ctx.where(Hero.class));
+            hero=heroList.get(0);
+            update_all();
+        }
+    }
+
     //更新英雄的显示状态，所有状态
     public void update_rk(){
         Text rk=(Text) dl.findComponentById(ResourceTable.Id_red_key);
@@ -342,7 +358,7 @@ public class MapAbilitySlice extends AbilitySlice{
             hero.setRed_k(hero.getRed_k()+supply.getRed_key());
             hero.setBlue_k(hero.getBlue_k()+supply.getBlue_key());
             hero.setYellow_k(hero.getYellow_k()+supply.getYellow_key());
-            update_all();change_info(x,y,'0');
+            update_all();change_info(x,y,'0');reset_pos();
         }
     }
     public void reset_pos(){
