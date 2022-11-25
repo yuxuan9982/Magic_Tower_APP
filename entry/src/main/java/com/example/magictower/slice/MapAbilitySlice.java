@@ -1,11 +1,9 @@
 package com.example.magictower.slice;
 
-import com.example.magictower.Shopping;
 import com.example.magictower.model.*;
 import com.example.magictower.ResourceTable;
 import ohos.aafwk.ability.AbilitySlice;
 import ohos.aafwk.content.Intent;
-import ohos.agp.animation.AnimatorProperty;
 import ohos.agp.animation.AnimatorValue;
 import ohos.agp.colors.RgbColor;
 import ohos.agp.components.*;
@@ -15,7 +13,6 @@ import ohos.agp.utils.LayoutAlignment;
 import ohos.agp.window.dialog.CommonDialog;
 import ohos.agp.window.dialog.IDialog;
 import ohos.agp.window.dialog.ToastDialog;
-import ohos.app.Context;
 import ohos.data.DatabaseHelper;
 import ohos.data.orm.OrmContext;
 import ohos.global.resource.NotExistException;
@@ -24,8 +21,6 @@ import ohos.global.resource.Resource;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class MapAbilitySlice extends AbilitySlice{
     int cnt=10;
@@ -84,7 +79,7 @@ public class MapAbilitySlice extends AbilitySlice{
             case 'q':
                 return ResourceTable.Media_blue_key;
             case 'r':
-                return ResourceTable.Media_yellow_key;
+                return ResourceTable.Media_red_key;
 
         }
         return 0;

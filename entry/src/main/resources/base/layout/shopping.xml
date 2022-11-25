@@ -25,7 +25,7 @@
         <Image
             ohos:height="30vp"
             ohos:width="30vp"
-            ohos:background_element="$media:yellow_key"/>
+            ohos:background_element="$media:red_key"/>
         <Text
             ohos:height="match_content"
             ohos:width="match_content"

@@ -164,7 +164,7 @@
         <Image
             ohos:height="20vp"
             ohos:width="20vp"
-            ohos:background_element="$media:yellow_key"
+            ohos:background_element="$media:red_key"
             ohos:id="$+id:key3"
             ohos:top_margin="20vp"
             ohos:right_of="$id:blue_key"
