@@ -65,7 +65,27 @@ public class MainAbilitySlice extends AbilitySlice {
         info.setClickedListener(new Component.ClickedListener() {//添加逻辑
             @Override
             public void onClick(Component component) {
-
+                CommonDialog cd=new CommonDialog(getContext());
+                cd.setAutoClosable(true);
+                DirectionalLayout dl2=build_dl(0);
+                Text title= new Text(getContext());
+                //set_but_back(title,104,0,254);
+                title.setTextSize(50);title.setMultipleLine(true);
+                title.setText("信息说明");
+                Text content= new Text(getContext());
+                content.setTextSize(50);content.setMultipleLine(true);
+                content.setMultipleLine(true);
+                content.setText("游戏名：魔塔（仿）\n作者：于轩\n联系方式：2309941940@qq.com");
+                Text end=new Text(getContext());
+                end.setWidth(ComponentContainer.LayoutConfig.MATCH_CONTENT);
+                end.setHeight(ComponentContainer.LayoutConfig.MATCH_CONTENT);
+                end.setTextSize(50);
+                end.setText("ver:--1.01");
+                dl2.setPadding(20,20,20,20);
+                dl2.addComponent(title);dl2.addComponent(content);dl2.addComponent(end);
+                set_but_back(dl2,230,231,249);
+                cd.setContentCustomComponent(dl2);
+                cd.show();
             }
         });
     }
