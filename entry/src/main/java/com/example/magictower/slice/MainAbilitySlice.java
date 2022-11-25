@@ -41,14 +41,23 @@ public class MainAbilitySlice extends AbilitySlice {
             @Override
             public void onClick(Component component) {
                 List<Hero> hero= o_ctx.query(o_ctx.where(Hero.class));
-                if(hero.size()==0){
+                List<Now_select> selects=o_ctx.query(o_ctx.where(Now_select.class));
+                if(hero.size()==0||selects.size()==0){
                     ToastDialog td=new ToastDialog(getContext());
                     td.setText("你还没有存档记录！");
                     td.show();
                 }else{
                     Intent intent1=new Intent();
                     MapAbilitySlice slice=new MapAbilitySlice();
-                    present(slice,intent);
+                    String name=new String();
+                    int id=selects.get(0).getNowchose();
+                    if(id==0)name="勇士";
+                    else if(id==1)name="红衣魔王";
+                    else if(id==2)name="大主教";
+                    else if(id==3)name="白衣武士";
+                    else name="吸血鬼";
+                    intent1.setParam("name",name);
+                    present(slice,intent1);
                 }
             }
         });
@@ -61,17 +70,29 @@ public class MainAbilitySlice extends AbilitySlice {
         });
     }
     public void init_gragh(){
-        //初始化英雄
-        Hero hero= new Hero(1000,30,15,1,1,1,1,1,0,4,50,ResourceTable.Media_hero,"勇士");
-        o_ctx.insert(hero);o_ctx.flush();
-        hero=new Hero(30000,2666,2666,1,1,1,1,1,0,4,50,ResourceTable.Media_hero2,"红衣魔王");
-        o_ctx.insert(hero);o_ctx.flush();
-        hero=new Hero(3000,2200,1900,1,1,1,1,1,0,4,50,ResourceTable.Media_hero3,"大主教");
-        o_ctx.insert(hero);o_ctx.flush();
-        hero=new Hero(1300,300,150,1,1,1,1,1,0,4,50,ResourceTable.Media_hero4,"白衣武士");
-        o_ctx.insert(hero);o_ctx.flush();
-        hero=new Hero(45000,2550,2250,1,1,1,1,1,0,4,50,ResourceTable.Media_hero5,"吸血鬼");
-        o_ctx.insert(hero);o_ctx.flush();
+        List<Hero> heroes=o_ctx.query(o_ctx.where(Hero.class));
+        int sel=0;
+        for(Hero h:heroes){
+            if(h.getSelectable()==1)sel++;
+            o_ctx.delete(h);o_ctx.flush();
+        }
+//        if(heroes.size()==0){
+            //初始化英雄
+            Hero hero= new Hero(1000,30,15,1,1,1,1,1,0,4,50,ResourceTable.Media_hero,"勇士",sel>=0?1:0,0);
+            o_ctx.insert(hero);o_ctx.flush();
+            hero=new Hero(30000,2666,2666,1,1,1,1,1,0,4,50,ResourceTable.Media_hero2,"红衣魔王",sel>=4?1:0,0);
+            o_ctx.insert(hero);o_ctx.flush();
+            hero=new Hero(3000,2200,1900,1,1,1,1,1,0,4,50,ResourceTable.Media_hero3,"大主教",sel>=3?1:0,0);
+            o_ctx.insert(hero);o_ctx.flush();
+            hero=new Hero(1300,300,150,1,1,1,1,1,0,4,50,ResourceTable.Media_hero4,"白衣武士",sel>=2?1:0,0);
+            o_ctx.insert(hero);o_ctx.flush();
+            hero=new Hero(45000,2550,2250,1,1,1,1,1,0,4,50,ResourceTable.Media_hero5,"吸血鬼",sel>=5?1:0,0);
+            o_ctx.insert(hero);o_ctx.flush();
+//        }
+        List<Map> maps=o_ctx.query(o_ctx.where(Map.class));
+        for(Map m:maps){
+            o_ctx.delete(m);o_ctx.flush();
+        }
         //初始化地图
         char[][] map1={
                 {'1','1','1','1','0','1','1','1','1','1'},
@@ -81,8 +102,8 @@ public class MainAbilitySlice extends AbilitySlice {
                 {'1','1','1','1','s','1','1','1','1','1'},
                 {'1','w','v','u','t','x','y','z','1','1'},
                 {'1','1','1','1','b','1','1','1','1','1'},
-                {'1','1','0','0','d','a','0','0','1','1'},
-                {'1','1','1','0','e','0','1','1','1','1'},
+                {'1','1','0','0','0','a','0','0','1','1'},
+                {'1','1','1','0','0','0','1','1','1','1'},
                 {'1','1','1','1','3','1','1','1','1','1'}
         };
         String s=new String();
@@ -93,14 +114,14 @@ public class MainAbilitySlice extends AbilitySlice {
         o_ctx.insert(mp);o_ctx.flush();
 
         char[][] map2={
-                {'3','f','0','0','0','0','0','0','0','0'},
-                {'1','1','4','1','1','1','1','1','1','0'},
+                {'3','0','0','0','0','0','0','0','0','0'},
+                {'1','1','4','1','0','1','1','1','1','0'},
                 {'0','0','a','6','0','1','1','1','1','0'},
                 {'0','a','1','1','0','1','1','1','1','0'},
                 {'1','1','1','1','0','1','1','1','1','0'},
                 {'1','a','a','0','0','1','1','1','1','1'},
-                {'1','a','1','1','6','1','1','1','1','1'},
-                {'1','5','0','0','5','a','0','0','1','1'},
+                {'1','a','1','1','0','1','1','1','1','1'},
+                {'1','5','0','0','0','a','0','0','1','1'},
                 {'1','a','1','0','0','0','1','1','1','1'},
                 {'1','0','1','1','2','1','1','1','1','1'}
         };
@@ -113,16 +134,16 @@ public class MainAbilitySlice extends AbilitySlice {
 
         List<Monster> monsters=o_ctx.query(o_ctx.where(Monster.class));
         if(monsters.size()==0){
-            Monster monster=new Monster('a',200,20,10,5);
-            Monster m2=new Monster('b',100,10,5,2);
-            Monster m3=new Monster('c',400,30,15,10);
+            Monster monster=new Monster('a',200,20,10,5,30);
+            Monster m2=new Monster('b',100,10,5,2,10);
+            Monster m3=new Monster('c',400,30,15,10,100);
             o_ctx.insert(monster);o_ctx.insert(m2);o_ctx.insert(m3);
             o_ctx.flush();
-            m2=new Monster('d',2000,300,30,500);
+            m2=new Monster('d',2000,300,30,500,500);
             o_ctx.insert(m2);o_ctx.flush();
-            m2=new Monster('e',800,100,30,100);
+            m2=new Monster('e',800,100,30,100,1000);
             o_ctx.insert(m2);o_ctx.flush();
-            m2=new Monster('f',3000,500,300,9999);
+            m2=new Monster('f',90000,5000,3000,9999,9999);
             o_ctx.insert(m2);o_ctx.flush();
         }
 

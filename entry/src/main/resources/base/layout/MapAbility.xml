@@ -6,18 +6,43 @@
     ohos:background_element="#FF6A5ACD"
     ohos:orientation="vertical">
 
-    <Image
-        ohos:height="30vp"
-        ohos:width="30vp"
-        ohos:layout_alignment="right"
-        ohos:right_margin="20vp"
-        ohos:id="$+id:shop"
-        ohos:top_margin="5vp"
-        ohos:background_element="$media:shop"
-        />
+    <DirectionalLayout
+        ohos:height="match_content"
+        ohos:alignment="center"
+        ohos:orientation="horizontal"
+        ohos:width="match_parent">
+
+        <Image
+            ohos:height="30vp"
+            ohos:width="30vp"
+
+            ohos:id="$+id:shop"
+            ohos:top_margin="5vp"
+            ohos:background_element="$media:shop"
+            />
+
+        <Image
+            ohos:height="30vp"
+            ohos:width="30vp"
+            ohos:left_margin="10vp"
+            ohos:id="$+id:save"
+            ohos:top_margin="5vp"
+            ohos:background_element="$media:save"
+            />
+
+        <Image
+            ohos:height="30vp"
+            ohos:width="30vp"
+            ohos:left_margin="10vp"
+            ohos:id="$+id:upgrade"
+            ohos:top_margin="5vp"
+            ohos:background_element="$media:upgrade"
+            />
+
+    </DirectionalLayout>
     <DependentLayout
         ohos:height="match_content"
-        ohos:top_margin="5vp"
+        ohos:top_margin="10vp"
         ohos:left_margin="20vp"
         ohos:width="match_content">
         <Image
@@ -200,6 +225,28 @@
             ohos:top_margin="20vp"
             />
 
+
+        <Image
+            ohos:height="20vp"
+            ohos:width="20vp"
+            ohos:background_element="$media:exp2"
+            ohos:right_of="$id:money"
+            ohos:id="$+id:exp_img"
+            ohos:top_margin="20vp"
+            ohos:below="$id:red_key"
+            />
+
+        <Text
+            ohos:height="20vp"
+            ohos:width="100vp"
+            ohos:text="1"
+            ohos:auto_font_size="true"
+            ohos:id="$+id:exp"
+            ohos:below="$id:red_key"
+            ohos:right_of="$id:exp_img"
+            ohos:left_margin="5vp"
+            ohos:top_margin="20vp"
+            />
 
     </DependentLayout>
 

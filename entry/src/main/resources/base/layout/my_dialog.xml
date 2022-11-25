@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<DirectionalLayout
+    xmlns:ohos="http://schemas.huawei.com/res/ohos"
+    ohos:height="match_content"
+    ohos:width="match_parent"
+    ohos:alignment="center"
+    ohos:orientation="vertical">
+    <Text
+        ohos:height="40vp"
+        ohos:width="match_content"
+        ohos:text_size="40vp"
+        ohos:text="升级"
+        />
+    <Text
+        ohos:height="match_content"
+        ohos:width="match_parent"
+        ohos:multiple_lines="true"
+        ohos:text_size="30vp"
+        ohos:id="$+id:content"
+        ohos:text="是否要进行升级？本次升级需要"
+        />
+    <DirectionalLayout
+        ohos:height="30vp"
+        ohos:width="match_parent"
+        ohos:alignment="center"
+        ohos:orientation="horizontal"
+        >
+        <Button
+            ohos:height="30vp"
+            ohos:width="30vp"
+            ohos:text_size="25vp"
+            ohos:layout_alignment="left"
+            ohos:id="$+id:no"
+            ohos:text="否"/>
+        <Button
+            ohos:height="30vp"
+            ohos:width="30vp"
+            ohos:text_size="25vp"
+            ohos:id="$+id:yes"
+            ohos:left_margin="200vp"
+            ohos:text="是"/>
+    </DirectionalLayout>
+</DirectionalLayout>

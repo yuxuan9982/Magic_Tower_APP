@@ -114,9 +114,7 @@ public class MapAbilitySlice extends AbilitySlice{
         hero=heroes.get(0);
 //        info=o_ctx.query(o_ctx.where(Map.class).equalTo("level",hero.getLevel()) );
         List<Map> data=o_ctx.query(o_ctx.where(Map.class).equalTo("level",hero.getStair()) );
-        if(data.size()==0){
-
-        }else info=data.get(0);
+        info=data.get(0);
         info_s=info.getS();
 
         hero.setX(info.getS_x());hero.setY(info.getS_y());
@@ -217,6 +215,52 @@ public class MapAbilitySlice extends AbilitySlice{
             intent1.setParam("name",name);
             presentForResult(slice,intent1,0);
         });
+        Image img2=(Image) dl.findComponentById(ResourceTable.Id_save);
+        img2.setClickedListener(o->{
+            o_ctx.update(hero);o_ctx.flush();
+            info.setS(info_s);
+            o_ctx.update(info);o_ctx.flush();
+            ToastDialog td=new ToastDialog(getContext());
+            td.setText("存档成功！");
+            td.show();
+        });
+        Image img3=(Image) dl.findComponentById(ResourceTable.Id_upgrade);
+        img3.setClickedListener(o->{
+            CommonDialog cd=new CommonDialog(this);
+            DirectionalLayout dl=(DirectionalLayout) LayoutScatter.getInstance(getContext()).parse(ResourceTable.Layout_my_dialog,null,false);
+            cd.setAlignment(LayoutAlignment.HORIZONTAL_CENTER);
+            int need= hero.getLevel()*100;
+            Text text=(Text) dl.findComponentById(ResourceTable.Id_content);
+            text.setText("是否要进行升级？\n本次升级需要"+String.valueOf(need)+"经验值。\n升级会给你提供\n1000血量，30点攻击力和10点防御力。");
+
+            Button no=(Button) dl.findComponentById(ResourceTable.Id_no);
+            Button yes=(Button) dl.findComponentById(ResourceTable.Id_yes);
+            no.setClickedListener(c->{
+                cd.destroy();
+            });
+            yes.setClickedListener(c->{
+                if(need>hero.getExp()){
+                    ToastDialog td=new ToastDialog(getContext());
+                    td.setText("经验不足！");td.show();cd.destroy();
+                }else{
+                    ToastDialog td=new ToastDialog(getContext());
+                    td.setText("升级成功！");td.show();cd.destroy();
+                    hero.setExp(hero.getExp()-need);
+                    hero.setHealth(hero.getHealth()+1000);
+                    hero.setAttack(hero.getAttack()+30);
+                    hero.setDefence(hero.getDefence()+10);
+                    hero.setLevel(hero.getLevel()+1);
+                    update_all();
+                    o_ctx.update(hero);o_ctx.flush();
+                    info.setS(info_s);
+                    o_ctx.update(info);o_ctx.flush();
+                }
+            });
+            cd.setContentCustomComponent(dl);
+            cd.setAutoClosable(true);
+            cd.show();
+
+        });
         super.setUIContent(dl);
     }
 
@@ -266,8 +310,12 @@ public class MapAbilitySlice extends AbilitySlice{
         Text money=(Text) dl.findComponentById(ResourceTable.Id_money);
         money.setText(String.valueOf(hero.getMoney()));
     }
+    public void update_exp(){
+        Text exp=(Text) dl.findComponentById(ResourceTable.Id_exp);
+        exp.setText(String.valueOf(hero.getExp()));
+    }
     public void update_all(){
-        update_rk();update_bk();update_yk();update_st();update_heal();update_attack();update_defence();update_level();update_money();
+        update_rk();update_bk();update_yk();update_st();update_heal();update_attack();update_defence();update_level();update_money();update_exp();
     }
     int fg;
     Monster monster;
@@ -340,7 +388,13 @@ public class MapAbilitySlice extends AbilitySlice{
             o_ctx.update(hero);o_ctx.flush();
             info.setS(info_s);o_ctx.update(info);o_ctx.flush();
             in1.setParam("name",name);
-            present(slice,in1);
+            List<Map> data=o_ctx.query(o_ctx.where(Map.class).equalTo("level",hero.getStair()) );
+            if(data.size()==0){
+                SuccessSlice slice2=new SuccessSlice();
+                present(slice2,in1);
+            }else{
+                present(slice,in1);
+            }
             terminate();
         }else if(c=='2'){
             hero.setStair(hero.getStair()-1);
@@ -438,7 +492,8 @@ public class MapAbilitySlice extends AbilitySlice{
                     hero.setHealth(end_h1);
                     monster.setHealth(end_h2);
                     hero.setMoney(hero.getMoney()+monster.getMoney());
-                    update_heal();update_money();
+                    hero.setExp(hero.getExp()+monster.getExp());
+                    update_heal();update_money();update_exp();
                 }
             }
 

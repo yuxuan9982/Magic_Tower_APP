@@ -10,7 +10,8 @@ public class Hero extends OrmObject {
     private Integer id;
     int health,attack,defence,level,red_k,blue_k,yellow_k,stair,x,y,money,head;
     String name;
-    public Hero(int health,int attack,int defence,int level,int red_k,int blue_k,int yellow_k,int stair,int x,int y,int money,int head,String name){
+    int selectable,exp;
+    public Hero(int health,int attack,int defence,int level,int red_k,int blue_k,int yellow_k,int stair,int x,int y,int money,int head,String name,int sel,int exp){
         this.health=health;
         this.attack= attack;
         this.level=level;
@@ -23,6 +24,23 @@ public class Hero extends OrmObject {
         this.money=money;
         this.head=head;
         this.name=name;
+        this.selectable=sel;
+        this.exp=exp;
+    }
+    public int getExp() {
+        return exp;
+    }
+
+    public void setExp(int exp) {
+        this.exp = exp;
+    }
+
+    public int getSelectable() {
+        return selectable;
+    }
+
+    public void setSelectable(int selectable) {
+        this.selectable = selectable;
     }
 
     public String getName() {
