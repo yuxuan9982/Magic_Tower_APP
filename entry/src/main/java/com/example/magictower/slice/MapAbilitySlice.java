@@ -38,14 +38,17 @@ public class MapAbilitySlice extends AbilitySlice{
             case '1':
                 return ResourceTable.Media_wall;
             case '2':
-            case '3':
                 return ResourceTable.Media_stair;
+            case '3':
+                return ResourceTable.Media_up_stair;
             case '4':
                 return ResourceTable.Media_red_door;
             case '5':
                 return ResourceTable.Media_blue_door;
             case '6':
                 return ResourceTable.Media_yellow_door;
+            case '7':
+                return ResourceTable.Media_wall;
             case 'a':
                 return ResourceTable.Media_skeleton;
             case 'b':
@@ -58,6 +61,22 @@ public class MapAbilitySlice extends AbilitySlice{
                 return ResourceTable.Media_ash_judge;
             case 'f':
                 return ResourceTable.Media_final_boss;
+            case 'h':
+                return ResourceTable.Media_bubble;
+            case 'i':
+                return ResourceTable.Media_stone;
+            case 'j':
+                return ResourceTable.Media_blue_guard;
+            case 'k':
+                return ResourceTable.Media_white_warrior;
+            case 'l':
+                return ResourceTable.Media_blue_witch;
+            case 'm':
+                return ResourceTable.Media_boss;
+            case 'n':
+                return ResourceTable.Media_vampire;
+            case 'g':
+                return ResourceTable.Media_witch;
             case 's':
                 return ResourceTable.Media_god_shield;
             case 't':
@@ -79,7 +98,7 @@ public class MapAbilitySlice extends AbilitySlice{
             case 'q':
                 return ResourceTable.Media_blue_key;
             case 'r':
-                return ResourceTable.Media_red_key;
+                return ResourceTable.Media_yellow_key;
 
         }
         return 0;
@@ -355,7 +374,7 @@ public class MapAbilitySlice extends AbilitySlice{
             cd.setButton(1, "否", new IDialog.ClickedListener() {
                 @Override
                 public void onClick(IDialog iDialog, int i) {
-                    cd.destroy();
+                    cd.destroy();reset_pos();
                 }
             });
             cd.setButton(2, "是", new IDialog.ClickedListener() {
@@ -365,7 +384,23 @@ public class MapAbilitySlice extends AbilitySlice{
                     change_info(x,y,'0');
                     new_x=hero.getX();new_y=hero.getY();
                     //点了就销毁
-                    cd.destroy();
+                    cd.destroy();reset_pos();
+                }
+            });
+            cd.setButton(0, "详细信息", new IDialog.ClickedListener() {
+                @Override
+                public void onClick(IDialog iDialog, int i) {
+                    CommonDialog cd2=new CommonDialog(getContext());
+                    show_l= (DirectionalLayout) LayoutScatter.getInstance(getContext()).parse(ResourceTable.Layout_status,null,false);
+                    update_show();
+                    cd2.setAutoClosable(true);
+                    cd2.setContentCustomComponent(show_l);
+                    cd2.setAlignment(LayoutAlignment.HORIZONTAL_CENTER);
+                    Image img=(Image) show_l.findComponentById(ResourceTable.Id_status_monster);
+                    set_Background(img,get_resource(info_s.charAt(10*new_x+new_y)));
+                    Image img2=(Image) show_l.findComponentById(ResourceTable.Id_status_hero);
+                    set_Background(img2,hero.getHead());
+                    cd2.show();reset_pos();
                 }
             });
             cd.show();
@@ -383,6 +418,7 @@ public class MapAbilitySlice extends AbilitySlice{
                 ToastDialog td=new ToastDialog(getContext());td.setText("开锁成功");td.show();
                 hero.setRed_k(hero.getRed_k()-1);change_info(x,y,'0');reset_pos();
             }
+            update_rk();
         } else if (c == '5') {
             reset_pos();
             if(hero.getBlue_k()<=0){
@@ -391,6 +427,7 @@ public class MapAbilitySlice extends AbilitySlice{
                 ToastDialog td=new ToastDialog(getContext());td.setText("开锁成功");td.show();
                 hero.setBlue_k(hero.getBlue_k()-1);change_info(x,y,'0');reset_pos();
             }
+            update_bk();
         }else if (c=='6'){
             reset_pos();
             if(hero.getYellow_k()<=0){
@@ -400,7 +437,7 @@ public class MapAbilitySlice extends AbilitySlice{
                 hero.setYellow_k(hero.getYellow_k()-1);
                 change_info(x,y,'0');
             }
-
+            update_yk();
         }else if(c=='3'){
             hero.setStair(hero.getStair()+1);
             Intent in1=new Intent();
@@ -435,6 +472,8 @@ public class MapAbilitySlice extends AbilitySlice{
             hero.setBlue_k(hero.getBlue_k()+supply.getBlue_key());
             hero.setYellow_k(hero.getYellow_k()+supply.getYellow_key());
             update_all();change_info(x,y,'0');reset_pos();
+        }else if(c=='7'){
+            change_info(x,y,'0');
         }
     }
     public void reset_pos(){
