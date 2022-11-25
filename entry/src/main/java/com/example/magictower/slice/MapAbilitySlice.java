@@ -7,8 +7,10 @@ import ohos.aafwk.ability.AbilitySlice;
 import ohos.aafwk.content.Intent;
 import ohos.agp.animation.AnimatorProperty;
 import ohos.agp.animation.AnimatorValue;
+import ohos.agp.colors.RgbColor;
 import ohos.agp.components.*;
 import ohos.agp.components.element.PixelMapElement;
+import ohos.agp.components.element.ShapeElement;
 import ohos.agp.utils.LayoutAlignment;
 import ohos.agp.window.dialog.CommonDialog;
 import ohos.agp.window.dialog.IDialog;
@@ -98,6 +100,14 @@ public class MapAbilitySlice extends AbilitySlice{
             e.printStackTrace();
         }
     }
+    public void set_but_back(Component component,int r,int g,int b){
+        ShapeElement element=new ShapeElement();
+        element.setShape(ShapeElement.RECTANGLE);
+        element.setCornerRadius(30);
+        element.setRgbColor(new RgbColor(r,g,b));
+        //element.setStroke(10,new RgbColor(0,0,255));
+        component.setBackground(element);
+    }
     int new_x,new_y;
     DirectionalLayout dl;
     @Override
@@ -125,12 +135,12 @@ public class MapAbilitySlice extends AbilitySlice{
 
         TableLayout tl=new TableLayout(this);
         tl.setRowCount(cnt);tl.setColumnCount(cnt);
-
+        set_but_back(tl,128,138,135);
         //获取到宽度
         int tot_width= getLayoutParams().width;
         dx=dy=tot_width/cnt;
+        tl.setMarginTop(50);
         tot_width-=100;
-        tl.setMarginLeft(50);tl.setMarginTop(50);
         for(int i=0;i<cnt;i++){
             for(int j=0;j<cnt;j++){
                 mp[i][j]=new Image(this);
@@ -151,7 +161,10 @@ public class MapAbilitySlice extends AbilitySlice{
         up.setWidth(AttrHelper.vp2px(60,this));
         set_Background(up,ResourceTable.Media_up);
 
-        dl.addComponent(up);
+        DirectionalLayout dl1=new DirectionalLayout(getContext());
+        set_but_back(dl1,128,138,135);
+        dl1.addComponent(up);
+        dl.addComponent(dl1);
 
         DirectionalLayout ddl=new DirectionalLayout(this);
 
@@ -170,14 +183,26 @@ public class MapAbilitySlice extends AbilitySlice{
         int sz=(int)AttrHelper.vp2px(15,this);
         start.setMarginsTopAndBottom(sz,sz);
         start.setMarginsLeftAndRight(sz,sz);
-        ddl.addComponent(left);ddl.addComponent(start);ddl.addComponent(right);
+        DirectionalLayout dl2=new DirectionalLayout(getContext());
+        set_but_back(dl2,128,138,135);
+        DirectionalLayout dl3=new DirectionalLayout(getContext());
+        set_but_back(dl3,128,138,135);
+
+        dl2.addComponent(left);ddl.addComponent(dl2);
+        ddl.addComponent(start);
+        dl3.addComponent(right);ddl.addComponent(dl3);
 
         down.setHeight(AttrHelper.vp2px(30,this));
         down.setWidth(AttrHelper.vp2px(60,this));
         set_Background(down,ResourceTable.Media_down);
 
         dl.addComponent(ddl);
-        dl.addComponent(down);
+
+        DirectionalLayout dl4=new DirectionalLayout(getContext());
+        set_but_back(dl4,128,138,135);
+        dl4.addComponent(down);
+
+        dl.addComponent(dl4);
 
 
         set_Background(start,ResourceTable.Media_start2);

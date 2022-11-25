@@ -3,6 +3,7 @@
     xmlns:ohos="http://schemas.huawei.com/res/ohos"
     ohos:height="match_parent"
     ohos:width="match_parent"
+    ohos:background_element="$media:background3"
     ohos:alignment="center"
     ohos:orientation="vertical">
 
@@ -17,6 +18,7 @@
         />
     <ListContainer
         ohos:top_margin="5vp"
+        ohos:background_element="white"
         ohos:height="match_content"
         ohos:width="match_parent"
         ohos:id="$+id:list1"

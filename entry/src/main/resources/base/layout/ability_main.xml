@@ -4,7 +4,7 @@
     ohos:height="match_parent"
     ohos:width="match_parent"
     ohos:alignment="horizontal_center"
-    ohos:background_element="$media:magic_tower"
+    ohos:background_element="$media:background3"
     ohos:orientation="vertical">
 
     <Text
