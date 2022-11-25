@@ -66,6 +66,26 @@
         "orientation": "unspecified",
         "visible": true,
         "type": "page"
+      },
+      {
+        "name": "com.example.magictower.Choose_Hero",
+        "description": "$string:choose_hero_description",
+        "icon": "$media:icon",
+        "label": "$string:entry_Choose_Hero",
+        "launchType": "standard",
+        "orientation": "unspecified",
+        "visible": true,
+        "type": "page"
+      },
+      {
+        "name": "com.example.magictower.Success",
+        "description": "$string:success_description",
+        "icon": "$media:icon",
+        "label": "$string:entry_Success",
+        "launchType": "standard",
+        "orientation": "unspecified",
+        "visible": true,
+        "type": "page"
       }
     ]
   }

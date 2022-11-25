@@ -17,7 +17,7 @@ import java.util.List;
 
 public class ShoppingSlice extends AbilitySlice {
     Supply sup;
-    int money;
+    int money;String name;
     @Override
     public void onStart(Intent intent) {
         super.onStart(intent);
@@ -45,6 +45,7 @@ public class ShoppingSlice extends AbilitySlice {
         t7.setClickedListener(this::click);
         t8.setClickedListener(this::click);
         t9.setClickedListener(this::click);
+        name=intent.getStringParam("name");
     }
     public void click(Component o){
         switch (o.getId()){
@@ -77,7 +78,7 @@ public class ShoppingSlice extends AbilitySlice {
         money=Integer.valueOf(ss);
         DatabaseHelper helper=new DatabaseHelper(getContext());
         OrmContext o_ctx=helper.getOrmContext("database","database.db", Map_db.class);
-        List<Hero> heroList=o_ctx.query(o_ctx.where(Hero.class));
+        List<Hero> heroList=o_ctx.query(o_ctx.where(Hero.class).equalTo("name",name));
         Hero hero=heroList.get(0);
         if(hero.getMoney()>=money){
             hero.setHealth(hero.getHealth()+sup.getHealth());

@@ -35,6 +35,30 @@
     {
       "name": "entry_Shopping",
       "value": "entry_Shopping"
+    },
+    {
+      "name": "choose_hero_description",
+      "value": "Java_Empty Ability"
+    },
+    {
+      "name": "choose_hero_HelloWorld",
+      "value": "Hello World"
+    },
+    {
+      "name": "entry_Choose_Hero",
+      "value": "entry_Choose_Hero"
+    },
+    {
+      "name": "success_description",
+      "value": "Java_Empty Ability"
+    },
+    {
+      "name": "success_HelloWorld",
+      "value": "Hello World"
+    },
+    {
+      "name": "entry_Success",
+      "value": "entry_Success"
     }
   ]
 }

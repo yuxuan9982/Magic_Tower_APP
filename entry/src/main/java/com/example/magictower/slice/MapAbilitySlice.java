@@ -32,6 +32,7 @@ public class MapAbilitySlice extends AbilitySlice{
     int dx,dy;
     OrmContext o_ctx;
     Map info;String info_s;
+    String name;
     public int get_resource(char c){
         //根据类型，判断应该给什么样的背景图片
         switch (c){
@@ -108,16 +109,14 @@ public class MapAbilitySlice extends AbilitySlice{
 
         DatabaseHelper helper=new DatabaseHelper(this);
         o_ctx=helper.getOrmContext("database","database.db", Map_db.class);
-        List<Hero> heroes=o_ctx.query(o_ctx.where(Hero.class));
+        name=intent.getStringParam("name");
+        List<Hero> heroes=o_ctx.query(o_ctx.where(Hero.class).equalTo("name",name) );
         hero=heroes.get(0);
 //        info=o_ctx.query(o_ctx.where(Map.class).equalTo("level",hero.getLevel()) );
-        List<Map> data=o_ctx.query(o_ctx.where(Map.class) );
+        List<Map> data=o_ctx.query(o_ctx.where(Map.class).equalTo("level",hero.getStair()) );
+        if(data.size()==0){
 
-        for (int i=0;i<data.size();i++){
-            if(data.get(i).getLevel()==hero.getStair()){
-                info=data.get(i);
-            }
-        }
+        }else info=data.get(0);
         info_s=info.getS();
 
         hero.setX(info.getS_x());hero.setY(info.getS_y());
@@ -139,7 +138,7 @@ public class MapAbilitySlice extends AbilitySlice{
                 mp[i][j]=new Image(this);
                 set_Background(mp[i][j],get_resource(info_s.charAt(i*10+j) ) );
                 if(i==hero.getX()&&j==hero.getY()){
-                    set_Background(mp[i][j],ResourceTable.Media_hero );
+                    set_Background(mp[i][j],hero.getHead());
                 }
                 mp[i][j].setWidth(tot_width/cnt);
                 mp[i][j].setHeight(tot_width/cnt);
@@ -215,6 +214,7 @@ public class MapAbilitySlice extends AbilitySlice{
             o_ctx.update(hero);o_ctx.flush();
             Intent intent1=new Intent();
             ShoppingSlice slice=new ShoppingSlice();
+            intent1.setParam("name",name);
             presentForResult(slice,intent1,0);
         });
         super.setUIContent(dl);
@@ -223,8 +223,8 @@ public class MapAbilitySlice extends AbilitySlice{
     @Override
     protected void onResult(int requestCode, Intent resultIntent) {
         if(requestCode==0){
-            List<Hero> heroList=o_ctx.query(o_ctx.where(Hero.class));
-            hero=heroList.get(0);
+            List<Hero> heroes=o_ctx.query(o_ctx.where(Hero.class).equalTo("name",name) );
+            hero=heroes.get(0);
             update_all();
         }
     }
@@ -339,6 +339,7 @@ public class MapAbilitySlice extends AbilitySlice{
             MapAbilitySlice slice=new MapAbilitySlice();
             o_ctx.update(hero);o_ctx.flush();
             info.setS(info_s);o_ctx.update(info);o_ctx.flush();
+            in1.setParam("name",name);
             present(slice,in1);
             terminate();
         }else if(c=='2'){
@@ -347,6 +348,7 @@ public class MapAbilitySlice extends AbilitySlice{
             MapAbilitySlice slice=new MapAbilitySlice();
             o_ctx.update(hero);o_ctx.flush();
             info.setS(info_s);o_ctx.update(info);o_ctx.flush();
+            in1.setParam("name",name);
             present(slice,in1);
             terminate();
         }else if(c>='p'){
@@ -406,6 +408,8 @@ public class MapAbilitySlice extends AbilitySlice{
         end_h1=begin_h1-need*dmg2;end_h2=begin_h2-need*dmg1;
         Image img=(Image) show_l.findComponentById(ResourceTable.Id_status_monster);
         set_Background(img,get_resource(info_s.charAt(10*new_x+new_y)));
+        Image img2=(Image) show_l.findComponentById(ResourceTable.Id_status_hero);
+        set_Background(img2,hero.getHead());
         AnimatorValue animatorValue=new AnimatorValue();
         animatorValue.setDuration(1000);
         animatorValue.setValueUpdateListener(new AnimatorValue.ValueUpdateListener() {
@@ -445,7 +449,7 @@ public class MapAbilitySlice extends AbilitySlice{
     public boolean update_move(){
         int x=hero.getX(),y=hero.getY();
         set_Background(mp[x][y],ResourceTable.Media_ground);
-        set_Background(mp[new_x][new_y],ResourceTable.Media_hero);
+        set_Background(mp[new_x][new_y],hero.getHead());
         hero.setX(new_x);hero.setY(new_y);
         return true;
     }

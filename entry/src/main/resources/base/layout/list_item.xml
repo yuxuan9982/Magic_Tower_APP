@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<DependentLayout
+    xmlns:ohos="http://schemas.huawei.com/res/ohos"
+    ohos:height="match_content"
+    ohos:width="match_parent"
+    ohos:margin="10vp"
+    ohos:orientation="horizontal">
+    <Image
+        ohos:height="50vp"
+        ohos:width="50vp"
+        ohos:id="$+id:list_img"
+        ohos:background_element="$media:hero4"
+        ohos:scale_mode="stretch"
+        ohos:left_margin="20vp"
+        />
+    <Text
+        ohos:height="25vp"
+        ohos:width="match_content"
+        ohos:text="血量:1000"
+        ohos:text_size="25vp"
+        ohos:right_of="$id:list_img"
+        ohos:left_margin="5vp"
+        ohos:id="$+id:list_health"
+        />
+    <Text
+        ohos:height="match_content"
+        ohos:width="match_content"
+        ohos:text_size="20vp"
+        ohos:right_of="$id:list_img"
+        ohos:below="$id:list_health"
+        ohos:id="$+id:list_atk"
+        ohos:left_margin="5vp"
+        ohos:text="攻击:100  防御:40"
+        />
+    <Text
+        ohos:height="match_content"
+        ohos:width="match_content"
+        ohos:text_size="30vp"
+        ohos:align_parent_right="true"
+        ohos:top_margin="12vp"
+        ohos:right_margin="10vp"
+        ohos:text="姓名"
+        ohos:id="$+id:list_name"
+        />
+</DependentLayout>

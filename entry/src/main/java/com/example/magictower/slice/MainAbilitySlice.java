@@ -30,7 +30,8 @@ public class MainAbilitySlice extends AbilitySlice {
             public void onClick(Component component) {
                 init_gragh();
                 Intent intent1=new Intent();
-                MapAbilitySlice slice=new MapAbilitySlice();
+                //MapAbilitySlice slice=new MapAbilitySlice();
+                Choose_HeroSlice slice=new Choose_HeroSlice();
                 present(slice,intent);
             }
         });
@@ -61,7 +62,15 @@ public class MainAbilitySlice extends AbilitySlice {
     }
     public void init_gragh(){
         //初始化英雄
-        Hero hero= new Hero(1000,30,15,1,1,1,1,1,0,4,50);
+        Hero hero= new Hero(1000,30,15,1,1,1,1,1,0,4,50,ResourceTable.Media_hero,"勇士");
+        o_ctx.insert(hero);o_ctx.flush();
+        hero=new Hero(30000,2666,2666,1,1,1,1,1,0,4,50,ResourceTable.Media_hero2,"红衣魔王");
+        o_ctx.insert(hero);o_ctx.flush();
+        hero=new Hero(3000,2200,1900,1,1,1,1,1,0,4,50,ResourceTable.Media_hero3,"大主教");
+        o_ctx.insert(hero);o_ctx.flush();
+        hero=new Hero(1300,300,150,1,1,1,1,1,0,4,50,ResourceTable.Media_hero4,"白衣武士");
+        o_ctx.insert(hero);o_ctx.flush();
+        hero=new Hero(45000,2550,2250,1,1,1,1,1,0,4,50,ResourceTable.Media_hero5,"吸血鬼");
         o_ctx.insert(hero);o_ctx.flush();
         //初始化地图
         char[][] map1={
